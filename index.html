@@ -1,23 +1,644 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-    <title>Fast Salesforce SOQL Tool - No Server Required</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Culina — Recipes & Cooking Ideas</title>
+  <meta name="description" content="Beautiful, modern recipe website with search, filters, favorites, and curated holiday menus.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #fdfcfb;
+      --elevated: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --brand: #f43f5e; /* rose-500 */
+      --brand-600: #e11d48; /* rose-600 */
+      --accent: #f97316; /* orange-500 */
+      --brand-2: #06b6d4; /* cyan-500 */
+      --success: #10b981;
+      --danger: #ef4444;
+      --ring: rgba(244, 63, 94, .30);
+      --shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+      --shadow-md: 0 10px 30px rgba(16,24,40,.08);
+      --shadow-lg: 0 30px 70px rgba(16,24,40,.10);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --space: clamp(14px, 1.2vw, 18px);
+      --max: 1200px;
+      --hero-img: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1600&auto=format&fit=crop');
+    }
+
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1100px 480px at 85% -220px, rgba(244,63,94,.08), transparent 60%),
+                  radial-gradient(900px 380px at 10% -120px, rgba(6,182,212,.10), transparent 60%),
+                  var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 calc(var(--space) * 1.1); }
+
+    /* Skip link */
+    .skip-link { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 12px; top: 12px; width: auto; height: auto; background: var(--elevated); padding: 10px 14px; border-radius: 8px; box-shadow: var(--shadow-md); z-index: 1000; }
+
+    /* Announcement */
+    .announcement {
+      background: linear-gradient(90deg, rgba(244,63,94,.08), rgba(6,182,212,.10));
+      border-bottom: 1px solid rgba(100,116,139,.14);
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .announcement-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 0; }
+    .announcement .pill { justify-self: center; background: rgba(14,165,233,.12); color: var(--brand-600); padding: 6px 12px; border-radius: 999px; font-weight: 600; }
+    .announcement .right { justify-self: end; }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(160%) blur(10px); background: color-mix(in oklab, var(--bg) 94%, transparent); border-bottom: 1px solid rgba(100,116,139,.10); }
+    .topbar { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 14px; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .5px; }
+    .brand .logo { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: conic-gradient(from 210deg, #0ea5e9, #38bdf8, #22d3ee, #0ea5e9); box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); }
+    .brand span { font-family: "Playfair Display", Georgia, serif; font-size: 22px; }
+
+    .search { position: relative; }
+    .search input { width: 100%; border: 1px solid rgba(100,116,139,.18); background: var(--elevated); color: var(--text); border-radius: 12px; padding: 12px 40px; outline: none; box-shadow: var(--shadow-sm); }
+    .search input:focus { border-color: var(--brand); box-shadow: 0 0 0 6px var(--ring); }
+    .search .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .actions { display: flex; align-items: center; gap: 10px; }
+    .btn { border: 1px solid rgba(100,116,139,.18); background: var(--elevated); padding: 10px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform .08s ease, box-shadow .2s ease; }
+    .btn:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .btn.primary { background: linear-gradient(135deg, var(--brand), var(--accent) 60%, var(--brand-2)); color: white; border: none; box-shadow: 0 8px 20px rgba(244,63,94,.25); }
+
+    /* Nav */
+    .main-nav { border-top: 1px solid rgba(100,116,139,.10); }
+    .main-nav .nav-inner { display: flex; gap: 18px; overflow:auto; padding: 10px 0; scrollbar-width: none; }
+    .chip { white-space: nowrap; border: 1px solid rgba(100,116,139,.16); padding: 8px 12px; border-radius: 999px; color: var(--muted); background: var(--elevated); cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease; }
+    .chip:hover { box-shadow: 0 6px 16px rgba(6,182,212,.12); transform: translateY(-1px); }
+    .chip[aria-current="page"], .chip.active { background: linear-gradient(135deg, rgba(244,63,94,.12), rgba(6,182,212,.12)); color: var(--brand-600); border-color: rgba(244,63,94,.25); font-weight: 600; }
+
+    /* Hero */
+    .hero { position: relative; isolation: isolate; }
+    .hero-inner { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: center; padding: clamp(28px, 5vw, 64px) 0; }
+    .headline { font-family: "Playfair Display", Georgia, serif; font-weight: 700; letter-spacing: .3px; font-size: clamp(34px, 6vw, 60px); line-height: 1.04; margin: 0 0 12px; }
+    .subhead { color: var(--muted); font-size: clamp(16px, 1.8vw, 18px); max-width: 58ch; }
+    .hero-cta { display: flex; gap: 12px; margin-top: 18px; }
+    .hero-illustration { position: relative; border-radius: var(--radius-lg); height: clamp(260px, 36vw, 460px); box-shadow: var(--shadow-lg); overflow: hidden; background:
+      linear-gradient( to bottom right, rgba(244,63,94,.25), rgba(6,182,212,.25) ),
+      var(--hero-img) center/cover no-repeat; }
+    .hero-illustration::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.0), rgba(255,255,255,.08) 60%, rgba(255,255,255,.25)); }
+    .statbar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .stat { background: var(--elevated); border: 1px solid rgba(100,116,139,.12); padding: 14px; border-radius: 14px; text-align: center; box-shadow: var(--shadow-sm); }
+    .stat b { display: block; font-size: 18px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+
+    /* Filters */
+    .filters { margin-top: 10px; display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; }
+    .filters .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .select { border: 1px solid rgba(100,116,139,.18); padding: 10px 12px; border-radius: 10px; background: var(--elevated); color: var(--muted); }
+
+    /* Recipe Grid */
+    .section { padding: clamp(24px, 4vw, 48px) 0; }
+    .section h2 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(26px, 4.2vw, 40px); margin: 0 0 18px; letter-spacing: .2px; background: linear-gradient(90deg, rgba(244,63,94,.12), rgba(6,182,212,.12)); -webkit-background-clip: text; background-clip: text; color: var(--text); }
+    .recipes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    @media (max-width: 1000px) { .recipes-grid { grid-template-columns: repeat(2, 1fr); } .hero-inner { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .recipes-grid { grid-template-columns: 1fr; } .filters { grid-template-columns: 1fr; } .topbar { grid-template-columns: 1fr; grid-auto-rows: auto; } .announcement-inner { grid-template-columns: 1fr; text-align: center; } .announcement .right { justify-self: center; } }
+
+    .card { position: relative; background: var(--elevated); border: 1px solid rgba(100,116,139,.12); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; cursor: pointer; }
+    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .card img { aspect-ratio: 16/11; object-fit: cover; width: 100%; }
+    .card-body { padding: 12px 14px 14px; }
+    .meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
+    .title { font-weight: 700; margin: 6px 0 8px; line-height: 1.3; }
+    .tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(6,182,212,.12); color: var(--brand-600); border: 1px solid rgba(6,182,212,.25); }
+    .label { position: absolute; top: 10px; left: 10px; z-index: 2; padding: 6px 10px; border-radius: 999px; background: linear-gradient(135deg, rgba(244,63,94,.95), rgba(6,182,212,.95)); color: #fff; font-size: 12px; box-shadow: 0 6px 16px rgba(16,24,40,.16); }
+    .fav { position: absolute; right: 10px; top: 10px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 999px; background: rgba(0,0,0,.45); color: white; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.2); }
+    .fav.active { background: rgba(239,68,68,.92); }
+
+    /* Carousel */
+    .carousel { position: relative; }
+    .carousel-track { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+    .carousel-track::-webkit-scrollbar { height: 8px; }
+    .carousel-item { scroll-snap-align: start; background: var(--elevated); border: 1px solid rgba(100,116,139,.14); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .carousel .nav { position: absolute; inset: 0; pointer-events: none; }
+    .carousel button { pointer-events: all; position: absolute; top: 50%; transform: translateY(-50%); border: none; width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center; background: linear-gradient(180deg, #fff, #f8fafc); box-shadow: 0 6px 16px rgba(16,24,40,.12); border: 1px solid rgba(100,116,139,.14); }
+    .carousel .prev { left: -10px; }
+    .carousel .next { right: -10px; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 100; }
+    .modal.active { display: flex; }
+    .modal::before { content: ""; position: absolute; inset: 0; background: rgba(3,7,18,.7); backdrop-filter: blur(6px); }
+    .dialog { position: relative; width: min(900px, 92vw); max-height: 86vh; overflow: auto; background: var(--elevated); border: 1px solid rgba(100,116,139,.2); border-radius: 16px; box-shadow: var(--shadow-lg); }
+    .dialog header { position: sticky; top: 0; background: inherit; border-bottom: 1px solid rgba(100,116,139,.14); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .dialog .body { padding: 16px 18px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 800px) { .dialog .body { grid-template-columns: 1fr; } }
+    .dialog h3 { margin: 0; font-size: 22px; }
+    .dialog .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+    .dialog ul { margin: 0; padding-left: 18px; line-height: 1.7; }
+    .close { border: 1px solid rgba(100,116,139,.18); background: var(--elevated); border-radius: 10px; width: 36px; height: 36px; display: grid; place-items: center; }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(100,116,139,.12); background: var(--surface); margin-top: 28px; }
+    .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; padding: 28px 0; }
+    @media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-col h4 { margin: 0 0 10px; font-size: 16px; }
+    .footer-col a { color: var(--muted); display: block; padding: 6px 0; }
+    .newsletter { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .newsletter input { border: 1px solid rgba(100,116,139,.18); padding: 10px 12px; border-radius: 10px; background: var(--elevated); }
+
+    /* Back to top */
+    .to-top { position: fixed; right: 16px; bottom: 16px; transform: translateY(20px); opacity: 0; transition: all .25s ease; z-index: 40; }
+    .to-top.visible { transform: translateY(0); opacity: 1; }
+  </style>
 </head>
-	<body>
-		Hello World!
-<script type='text/javascript'>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <div class="announcement">
+    <div class="container announcement-inner" role="region" aria-label="Site announcement">
+      <div>Free shipping on cookware, electrics, cutlery & more</div>
+      <div class="pill">Up to 50% off select brands</div>
+      <div class="right">Discover new arrivals this season →</div>
+    </div>
+  </div>
+
+  <header class="site-header" role="banner">
+    <div class="container topbar">
+      <a class="brand" href="#" aria-label="Culina home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Culina</span>
+      </a>
+      <label class="search" for="searchInput">
+        <svg class="icon" width="18" height="18" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
+        <input id="searchInput" type="search" placeholder="Search recipes, chefs, ingredients…" autocomplete="off" aria-label="Search recipes">
+      </label>
+      <div class="actions">
+        <button class="btn" id="favoritesBtn" aria-label="View favorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.4-8.3C1 9.6 2.6 6.8 5.4 6.2c1.9-.4 3.8.3 4.9 1.8 1.1-1.6 3-2.3 4.9-1.8 2.7.6 4.4 3.4 2.8 6.5C19.5 16.3 12 21 12 21z"/></svg><span id="favCount" aria-live="polite">0</span></button>
+        <button class="btn primary" id="subscribeBtn">Subscribe</button>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Primary">
+      <div class="container nav-inner">
+        <a class="chip" href="#" aria-current="page">New</a>
+        <a class="chip" href="#recipes">Recipes</a>
+        <a class="chip" href="#holiday">Holiday Meals</a>
+        <a class="chip" href="#videos">Test Kitchen</a>
+        <a class="chip" href="#cocktails">Cocktails</a>
+        <a class="chip" href="#cookbooks">Cookbooks</a>
+        <a class="chip" href="#gifts">Gifts</a>
+        <a class="chip" href="#sale">Sale</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="container hero" aria-labelledby="heroTitle">
+      <div class="hero-inner">
+        <div>
+          <h1 id="heroTitle" class="headline">Recipes & Cooking Ideas</h1>
+          <p class="subhead">Explore the season’s most-loved dishes, step‑by‑step guides, and chef tips designed to inspire and delight every cook at home.</p>
+          <div class="hero-cta">
+            <a href="#recipes" class="btn primary">Browse Recipes</a>
+            <button class="btn" id="randomBtn">I’m Feeling Hungry</button>
+          </div>
+          <div class="statbar">
+            <div class="stat"><b id="statRecipes">0</b><span>Recipes</span></div>
+            <div class="stat"><b>24</b><span>Seasonal Menus</span></div>
+            <div class="stat"><b>120k+</b><span>Home Cooks</span></div>
+          </div>
+        </div>
+        <div class="hero-illustration" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section id="recipes" class="container section" aria-labelledby="recipesTitle">
+      <h2 id="recipesTitle">Explore Recipes</h2>
+      <div class="filters" role="region" aria-label="Recipe filters">
+        <div class="chips" id="categoryChips"></div>
+        <select id="dietSelect" class="select" aria-label="Diet">
+          <option value="">All Diets</option>
+          <option>Vegetarian</option>
+          <option>Vegan</option>
+          <option>Gluten‑Free</option>
+          <option>Keto</option>
+        </select>
+        <select id="sortSelect" class="select" aria-label="Sort">
+          <option value="pop">Most Popular</option>
+          <option value="new">Newest</option>
+          <option value="time">Quickest</option>
+        </select>
+      </div>
+
+      <div class="recipes-grid" id="grid" aria-live="polite"></div>
+    </section>
+
+    <section id="holiday" class="container section" aria-labelledby="holidayTitle">
+      <h2 id="holidayTitle">Holiday Meals</h2>
+      <div class="carousel">
+        <div class="carousel-track" id="holidayTrack"></div>
+        <div class="nav" aria-hidden="true">
+          <button class="prev" data-target="holidayTrack" aria-label="Previous">◀</button>
+          <button class="next" data-target="holidayTrack" aria-label="Next">▶</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="videos" class="container section" aria-labelledby="videoTitle">
+      <h2 id="videoTitle">What’s Cooking in the Test Kitchen</h2>
+      <div class="carousel">
+        <div class="carousel-track" id="videoTrack"></div>
+        <div class="nav" aria-hidden="true">
+          <button class="prev" data-target="videoTrack" aria-label="Previous">◀</button>
+          <button class="next" data-target="videoTrack" aria-label="Next">▶</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Stay in the loop</h4>
+        <div class="newsletter">
+          <input id="email" type="email" placeholder="Enter your email" aria-label="Email address">
+          <button class="btn primary" id="joinBtn">Join</button>
+        </div>
+        <p class="subhead" style="margin-top:8px;font-size:13px">By subscribing you agree to receive updates and promotions.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Recipes</h4>
+        <a href="#">By Course</a>
+        <a href="#">Quick & Easy</a>
+        <a href="#">Healthy</a>
+        <a href="#">Desserts</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Guides</a>
+        <a href="#">Cookware</a>
+        <a href="#">Knife Skills</a>
+        <a href="#">Help</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <button class="btn to-top" id="toTop" aria-label="Back to top">↑</button>
+
+  <!-- Recipe Modal -->
+  <div class="modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="dialog">
+      <header>
+        <div>
+          <h3 id="modalTitle">Recipe</h3>
+          <div class="subtitle" id="modalSubtitle"></div>
+        </div>
+        <button class="close" id="closeModal" aria-label="Close">✕</button>
+      </header>
+      <div class="body">
+        <div>
+          <img id="modalImg" alt="">
+        </div>
+        <div>
+          <h4>Ingredients</h4>
+          <ul id="modalIngredients"></ul>
+          <h4>Steps</h4>
+          <ol id="modalSteps"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const state = {
+      favorites: new Set(JSON.parse(localStorage.getItem('culina:favs') || '[]')),
+      query: '',
+      category: 'All',
+      diet: '',
+      sort: 'pop'
+    };
+
+    const CATEGORIES = ['All','Appetizers','Soups','Salads','Pasta','Seafood','Chicken','Beef','Vegan','Desserts'];
+    const RECIPES = [
+      { id: 'pumpkin-soup', name: 'Roasted Pumpkin & Chickpea Soup', category: 'Soups', diet: 'Vegetarian', time: 35, rating: 4.8, pop: 99,
+        img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Fall','One‑Pot'],
+        ingredients: ['1 tbsp olive oil','1 onion, chopped','2 cups pumpkin, roasted','1 cup chickpeas','3 cups vegetable stock','1 tsp cumin','Salt & pepper'],
+        steps: ['Sauté onion in oil until soft.','Add pumpkin and chickpeas; cook 3 minutes.','Pour in stock and simmer 12 minutes.','Blend until smooth; season to taste.'] },
+      { id: 'diwali-thali', name: 'Spiced Lentil & Paneer Thali', category: 'Vegan', diet: 'Vegetarian', time: 40, rating: 4.7, pop: 94,
+        img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Festive','High‑Protein'],
+        ingredients: ['1 cup red lentils','200g paneer cubes','1 onion','2 tomatoes','1 tsp garam masala','Cilantro'],
+        steps: ['Cook lentils until tender.','Sauté onion and tomatoes with spices.','Fold in paneer and lentils; simmer 5 minutes.'] },
+      { id: 'roast-beef', name: 'Herb‑Crusted Roast Beef', category: 'Beef', diet: '', time: 90, rating: 4.9, pop: 97,
+        img: 'https://images.unsplash.com/photo-1604908554049-1be34935a4fb?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Holiday','Crowd‑Pleaser'],
+        ingredients: ['1.5 kg beef roast','2 tbsp Dijon','2 tbsp rosemary','3 garlic cloves','Salt & pepper'],
+        steps: ['Rub beef with mustard, herbs and garlic.','Roast at 425°F for 20 min then 350°F until desired doneness.','Rest 15 minutes before slicing.'] },
+      { id: 'caviar-board', name: 'Caviar & Crème Fraîche Bites', category: 'Appetizers', diet: 'Gluten‑Free', time: 15, rating: 4.6, pop: 80,
+        img: 'https://images.unsplash.com/photo-1532787799187-9361160b703b?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Entertaining'],
+        ingredients: ['Blini or chips','Crème fraîche','Caviar','Chives','Lemon'],
+        steps: ['Top base with crème fraîche, caviar and chives.','Finish with lemon zest.'] },
+      { id: 'noodle-nest', name: 'Crispy Parmesan Noodle Nests', category: 'Pasta', diet: '', time: 30, rating: 4.5, pop: 82,
+        img: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Weeknight','Crispy'],
+        ingredients: ['200g spaghetti','1/2 cup parmesan','2 tbsp butter','Pepper'],
+        steps: ['Cook pasta to al dente.','Toss with butter & parmesan.','Twirl nests and bake until crisp.'] },
+      { id: 'avocado-cut', name: 'How to Cut an Avocado', category: 'Salads', diet: 'Vegan', time: 5, rating: 4.4, pop: 75,
+        img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Skill','Basics'],
+        ingredients: ['1 ripe avocado','Knife','Spoon'],
+        steps: ['Slice lengthwise around the pit.','Twist to separate halves.','Tap and rotate to remove pit.','Scoop slices.'] },
+      { id: 'lemon-spritz', name: 'Limoncello Spritz', category: 'Desserts', diet: 'Vegetarian', time: 3, rating: 4.3, pop: 78,
+        img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Cocktail','Light'],
+        ingredients: ['2 oz limoncello','3 oz prosecco','Soda water','Ice','Lemon'],
+        steps: ['Combine over ice.','Top with soda.','Garnish with lemon.'] },
+      { id: 'pumpkin-brownies', name: 'Fudgy Pumpkin Swirl Brownies', category: 'Desserts', diet: 'Vegetarian', time: 45, rating: 4.8, pop: 92,
+        img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476f?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Fall','Baking'],
+        ingredients: ['Brownie batter','Pumpkin purée','Cream cheese','Sugar','Spices'],
+        steps: ['Layer brownie batter in pan.','Dollop pumpkin mix and swirl.','Bake until set.'] },
+    ];
+
+    const HOLIDAY = [
+      { title: 'Rosh Hashanah Dinner', img: 'https://images.unsplash.com/photo-1606857521015-7f9fcf4235df?q=80&w=1200&auto=format&fit=crop' },
+      { title: 'Diwali Feast', img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172ef?q=80&w=1200&auto=format&fit=crop' },
+      { title: 'Halloween Party', img: 'https://images.unsplash.com/photo-1603899122629-3eaba427fd62?q=80&w=1200&auto=format&fit=crop' },
+      { title: 'Fall Harvest Dinner', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop' }
+    ];
+
+    const VIDEOS = [
+      { title: 'How to Make a Noodle Nest', thumb: 'https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+      { title: 'How to Make a Limoncello Spritz', thumb: 'https://images.unsplash.com/photo-1523365280197-f1783db9fe62?q=80&w=1200&auto=format&fit=crop', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+      { title: 'How to Make a Caviar Board', thumb: 'https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+      { title: 'How to Cut an Avocado', thumb: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+    ];
+
+    function saveFavs() {
+      localStorage.setItem('culina:favs', JSON.stringify([...state.favorites]));
+      $('#favCount').textContent = state.favorites.size;
+    }
+
+    function starRating(r) {
+      const full = Math.floor(r), half = r - full >= 0.5;
+      return '<span aria-label="Rating ' + r + ' out of 5">' +
+        '★★★★★'.slice(0, full) + (half ? '½' : '') + '</span>';
+    }
+
+    function renderCategoryChips() {
+      const box = $('#categoryChips');
+      box.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const a = document.createElement('button');
+        a.className = 'chip' + (state.category === cat ? ' active' : '');
+        a.type = 'button'; a.textContent = cat; a.setAttribute('aria-pressed', state.category === cat);
+        a.addEventListener('click', () => { state.category = cat; renderGrid(); });
+        box.appendChild(a);
+      });
+    }
+
+    function filterSort(list) {
+      const q = state.query.toLowerCase();
+      let out = list.filter(r =>
+        (!q || r.name.toLowerCase().includes(q) || r.tags.some(t => t.toLowerCase().includes(q))) &&
+        (state.category === 'All' || r.category === state.category) &&
+        (!state.diet || r.diet === state.diet)
+      );
+      if (state.sort === 'new') out = out.slice().reverse();
+      if (state.sort === 'time') out = out.slice().sort((a,b)=>a.time-b.time);
+      if (state.sort === 'pop') out = out.slice().sort((a,b)=>b.pop-a.pop);
+      return out;
+    }
+
+    function recipeCard(r) {
+      const fav = state.favorites.has(r.id);
+      return `
+        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}">
+          <span class="label">${r.tags[0] || 'Featured'}</span>
+          <img src="${r.img}" alt="${r.name}" loading="lazy" decoding="async">
+          <button class="fav ${fav ? 'active' : ''}" aria-label="Favorite ${r.name}" data-fav="${r.id}">❤</button>
+          <div class="card-body">
+            <div class="tag">${r.category}</div>
+            <div class="title">${r.name}</div>
+            <div class="meta">
+              <span>⏱ ${r.time} min</span>
+              <span>•</span>
+              <span>${starRating(r.rating)}</span>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderGrid() {
+      const list = filterSort(RECIPES);
+      $('#grid').innerHTML = list.map(recipeCard).join('');
+      $('#statRecipes').textContent = RECIPES.length;
+
+      // Wire favorites and modal
+      $$('#grid .fav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.fav;
+          if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
+          btn.classList.toggle('active');
+          saveFavs();
+        });
+      });
+      $$('#grid .card').forEach(card => card.addEventListener('click', () => openRecipe(card.dataset.id)));
+    }
+
+    function openRecipe(id) {
+      const r = RECIPES.find(x=>x.id===id); if (!r) return;
+      $('#modalTitle').textContent = r.name;
+      $('#modalSubtitle').textContent = r.tags.join(' • ');
+      $('#modalImg').src = r.img; $('#modalImg').alt = r.name;
+      $('#modalIngredients').innerHTML = r.ingredients.map(i=>`<li>${i}</li>`).join('');
+      $('#modalSteps').innerHTML = r.steps.map(s=>`<li>${s}</li>`).join('');
+      const m = $('#recipeModal'); m.classList.add('active'); m.removeAttribute('aria-hidden');
+      $('#closeModal').focus();
+    }
+
+    function closeModal() {
+      const m = $('#recipeModal'); m.classList.remove('active'); m.setAttribute('aria-hidden','true');
+    }
+
+    function renderHoliday() {
+      const track = $('#holidayTrack');
+      track.innerHTML = HOLIDAY.map(h=>`
+        <article class="carousel-item">
+          <img src="${h.img}" alt="${h.title}" loading="lazy" decoding="async">
+          <div class="card-body">
+            <div class="title">${h.title}</div>
+            <div class="meta">Festive recipes designed to inspire and delight →</div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderVideos() {
+      const track = $('#videoTrack');
+      track.innerHTML = VIDEOS.map(v=>`
+        <article class="carousel-item" role="button" aria-label="Play ${v.title}" data-url="${v.url}">
+          <img src="${v.thumb}" alt="${v.title}" loading="lazy" decoding="async">
+          <div class="card-body">
+            <div class="title">${v.title}</div>
+            <div class="meta">▶ Watch</div>
+          </div>
+        </article>
+      `).join('');
+      $$('#videoTrack .carousel-item').forEach(item => item.addEventListener('click', () => {
+        // Reuse recipe modal body as lightweight video viewer
+        $('#modalTitle').textContent = item.querySelector('.title').textContent;
+        $('#modalSubtitle').textContent = 'Test Kitchen';
+        $('#modalImg').src = item.querySelector('img').src; // poster
+        $('#modalIngredients').innerHTML = `<li><a href="${item.dataset.url}" target="_blank" rel="noopener">Open video on YouTube</a></li>`;
+        $('#modalSteps').innerHTML = '<li>Follow along and cook with us!</li>';
+        $('#recipeModal').classList.add('active'); $('#recipeModal').removeAttribute('aria-hidden');
+      }));
+    }
+
+    function wireCarousels() {
+      $$('.carousel .prev, .carousel .next').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.target; const el = document.getElementById(id);
+          const delta = btn.classList.contains('prev') ? -1 : 1;
+          const w = el.clientWidth; el.scrollBy({ left: delta * (w - 80), behavior: 'smooth' });
+        });
+      });
+    }
+
+    function wireHeader() {
+      const top = $('#toTop');
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY; top.classList.toggle('visible', y > 300);
+      });
+      top.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      $('#searchInput').addEventListener('input', (e)=>{ state.query = e.target.value; renderGrid(); });
+      $('#dietSelect').addEventListener('input', (e)=>{ state.diet = e.target.value; renderGrid(); });
+      $('#sortSelect').addEventListener('input', (e)=>{ state.sort = e.target.value; renderGrid(); });
+      $('#randomBtn').addEventListener('click', ()=>{ const r = RECIPES[Math.floor(Math.random()*RECIPES.length)]; openRecipe(r.id); });
+      $('#favoritesBtn').addEventListener('click', ()=>{
+        // Show favorites filtered view
+        if (state.favorites.size === 0) return alert('No favorites yet. Tap the heart on any recipe.');
+        const list = RECIPES.filter(r=>state.favorites.has(r.id));
+        $('#grid').innerHTML = list.map(recipeCard).join('');
+      });
+      $('#subscribeBtn').addEventListener('click', ()=> alert('Thanks for your interest! Newsletter coming soon.'));
+      $('#joinBtn').addEventListener('click', ()=> {
+        const email = $('#email').value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert('Enter a valid email.');
+        alert('Welcome to Culina!'); $('#email').value = '';
+      });
+    }
+
+    // Modal close and accessibility
+    $('#closeModal').addEventListener('click', closeModal);
+    $('#recipeModal').addEventListener('click', (e)=>{ if (e.target.id === 'recipeModal') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
+
+    // Init
+    (function init(){
+      renderCategoryChips();
+      renderGrid();
+      renderHoliday();
+      renderVideos();
+      wireCarousels();
+      wireHeader();
+      saveFavs();
+    })();
+
+    // Image fallbacks to ensure visuals never appear missing
+    function makePoster(text, width, height) {
+      const w = Math.max(800, width || 1200);
+      const h = Math.max(520, height || Math.round(w * 0.66));
+      const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d');
+      const g = ctx.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, '#fff1f3'); g.addColorStop(1, '#ecfeff');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      // soft circles
+      function circle(x,y,r,fill){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle = fill; ctx.fill(); }
+      circle(w*0.15, h*0.22, Math.min(w,h)*0.10, 'rgba(244,63,94,0.10)');
+      circle(w*0.85, h*0.82, Math.min(w,h)*0.16, 'rgba(6,182,212,0.12)');
+      // title text
+      ctx.font = `700 ${Math.round(Math.min(w,h) * 0.06)}px "Playfair Display", serif`;
+      ctx.fillStyle = '#0f172a';
+      ctx.shadowColor = 'rgba(255,255,255,0.6)';
+      ctx.shadowBlur = 6;
+      const lines = [];
+      const words = (text || 'Recipe').split(' ');
+      let line = '';
+      words.forEach(word => {
+        const test = (line ? line + ' ' : '') + word;
+        if (ctx.measureText(test).width < w * 0.8) { line = test; } else { lines.push(line); line = word; }
+      });
+      if (line) lines.push(line);
+      const totalH = lines.length * (Math.min(w,h) * 0.08);
+      let y = h/2 - totalH/2;
+      lines.forEach(l => { ctx.fillText(l, w*0.1, y += Math.min(w,h) * 0.08); });
+      return c.toDataURL('image/png');
+    }
+
+    // Catch broken <img> loads anywhere and swap to a generated poster with the recipe name
+    document.addEventListener('error', (e) => {
+      const t = e.target;
+      if (t && t.tagName === 'IMG' && !t.dataset.fallback) {
+        t.dataset.fallback = '1';
+        const title = t.getAttribute('alt') || 'Recipe';
+        t.src = makePoster(title, t.naturalWidth || t.clientWidth*2, t.naturalHeight || t.clientHeight*2);
+      }
+    }, true);
+
+    // Proactively validate hero background image and fall back to gradient if it fails
+    (function ensureHeroImage(){
+      const css = getComputedStyle(document.documentElement).getPropertyValue('--hero-img').trim();
+      if (!css) return;
+      const m = css.match(/url\(("|')?(.*?)("|')?\)/);
+      if (!m) return;
+      const src = m[2];
+      const img = new Image();
+      img.onload = () => {};
+      img.onerror = () => {
+        document.documentElement.style.setProperty('--hero-img', 'linear-gradient(135deg,#fff1f3,#ecfeff)');
+      };
+      img.src = src;
+    })();
+  </script>
+	<script type='text/javascript'>
 	function initEmbeddedMessaging() {
 		try {
-			agentforce_messaging.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'// For example, enter 'en' or 'en-US'
-			agentforce_messaging.settings.devMode = true;
-			agentforce_messaging.init(
-				'00DSG00000XOfTf', // sdb6 test org id
-				'cwc_salesforce_2',
-				'https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937',
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DSB00000a7RbR',
+				'CWCMessaging',
+				'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.site.com/ESWCWCMessaging1758618448434',
 				{
-					scrt2URL: 'https://orgfarm-0b9845e12f.test1.my.pc-rnd.salesforce-scrt.com'
+					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
 				}
 			);
 		} catch (err) {
@@ -25,7 +646,8 @@
 		}
 	};
 </script>
-<script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js' onload='initEmbeddedMessaging()'></script>
-   
+<script type='text/javascript' src='https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.site.com/ESWCWCMessaging1758618448434/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 </body>
 </html>
+
+
