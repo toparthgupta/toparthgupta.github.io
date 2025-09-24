@@ -110,6 +110,11 @@
         } else {
           try { delete global.INTEREST_KIT_DATA; } catch(e) { global.INTEREST_KIT_DATA = undefined; }
         }
+        try {
+          if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
+            global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
+          }
+        } catch(_) {}
       } catch(e){}
     },
     init(userConfig){
