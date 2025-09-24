@@ -22,14 +22,16 @@
   };
 
   const DEFAULT_BUCKETS = {
-    recipe: 'recipes',
-    category: 'categories',
-    video: 'videos',
-    diet: 'diets',
-    search: 'searchTerms',
-    section: 'sections',
-    action: 'actions',
-    tag: 'tags'
+    recipe: 'items',
+    category: 'items',
+    video: 'items',
+    diet: 'items',
+    search: 'items',
+    section: 'items',
+    action: 'items',
+    tag: 'items',
+    game: 'items',
+    trailer: 'items'
   };
 
   function now(){ return Date.now(); }
@@ -44,7 +46,7 @@
   function round2(n){ return Math.round((Number(n)||0) * 100) / 100; }
 
   function createData(){
-    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {} };
+    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {}, siteTitle: document.title || 'Unknown Site' };
   }
 
   function InterestStorage(storageKey){
@@ -57,6 +59,17 @@
         if (!obj || typeof obj !== 'object') return createData();
         if (!obj.buckets || typeof obj.buckets !== 'object') obj.buckets = {};
         if (!obj.meta || typeof obj.meta !== 'object') obj.meta = {};
+        
+        // Check if site title has changed - if so, reset data
+        const currentTitle = document.title || 'Unknown Site';
+        if (obj.siteTitle && obj.siteTitle !== currentTitle) {
+          console.log('InterestKit: Site title changed, resetting data');
+          return createData();
+        }
+        
+        // Ensure siteTitle is set
+        if (!obj.siteTitle) obj.siteTitle = currentTitle;
+        
         return obj;
       } catch(e){ return createData(); }
     }
@@ -110,8 +123,8 @@
     _updateGlobalDataExposure(){
       try {
         const data = this._storage ? this._storage.get() : null;
-        const has = !!(data && data.buckets && Object.values(data.buckets).some(b => Object.keys(b || {}).length > 0));
-        if (has) {
+        // Always expose data if storage exists, regardless of interaction count
+        if (data) {
           global.INTEREST_KIT_DATA = data;
         } else {
           try { delete global.INTEREST_KIT_DATA; } catch(e) { global.INTEREST_KIT_DATA = undefined; }
