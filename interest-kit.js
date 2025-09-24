@@ -12,7 +12,7 @@
     storageKey: 'interestkit:data',
     version: 1,
     observeMutations: true,
-    observeViews: true,
+    observeViews: false,
     viewThreshold: 0.4,
     debounceMs: 400,
     attributePrefix: 'track', // dataset prefix: dataset.track*, i.e., data-track-*
@@ -93,12 +93,23 @@
   const InterestKit = {
     _config: Object.assign({}, DEFAULT_CONFIG),
     _storage: null,
+    _updateGlobalDataExposure(){
+      try {
+        const data = this._storage ? this._storage.get() : null;
+        const has = !!(data && data.buckets && Object.values(data.buckets).some(b => Object.keys(b || {}).length > 0));
+        if (has) {
+          global.INTEREST_KIT_DATA = data;
+        } else {
+          try { delete global.INTEREST_KIT_DATA; } catch(e) { global.INTEREST_KIT_DATA = undefined; }
+        }
+      } catch(e){}
+    },
     init(userConfig){
       if (this._storage) return this; // already initialized
       this._config = Object.assign({}, DEFAULT_CONFIG, userConfig || {});
       this._storage = InterestStorage(this._config.storageKey);
-      // Expose live data for easy inspection
-      global.INTEREST_KIT_DATA = this._storage.get();
+      // Do not expose data globally until first recorded interaction
+      this._updateGlobalDataExposure();
       // Observers
       if (this._config.observeViews && 'IntersectionObserver' in global) {
         viewObserver = new IntersectionObserver(this._onView.bind(this), { threshold: clamp(this._config.viewThreshold, 0.1, 1) });
@@ -200,12 +211,12 @@
     record({ bucket, key, weight = 1 /*, meta */ }){
       if (!this._storage) this.init();
       this._storage.inc(bucket, key, weight);
-      global.INTEREST_KIT_DATA = this._storage.get();
+      this._updateGlobalDataExposure();
     },
     recordTokens(bucket, value, weight = 1){
       if (!this._storage) this.init();
       tokenize(value, this._config.tokenStopWords).forEach(tok => this._storage.inc(bucket, tok, weight));
-      global.INTEREST_KIT_DATA = this._storage.get();
+      this._updateGlobalDataExposure();
     },
     recordSearch(query, weight = 1){
       this.recordTokens(DEFAULT_BUCKETS.search, query, weight);
@@ -215,8 +226,8 @@
       return this._storage.getTop(bucket, n);
     },
     export(){ return this._storage ? this._storage.exportJSON() : createData(); },
-    import(obj){ if (!this._storage) this.init(); this._storage.importJSON(obj); global.INTEREST_KIT_DATA = this._storage.get(); },
-    reset(){ if (!this._storage) this.init(); this._storage.reset(); global.INTEREST_KIT_DATA = this._storage.get(); },
+    import(obj){ if (!this._storage) this.init(); this._storage.importJSON(obj); this._updateGlobalDataExposure(); },
+    reset(){ if (!this._storage) this.init(); this._storage.reset(); this._updateGlobalDataExposure(); },
     data(){ return this._storage ? this._storage.get() : createData(); }
   };
 
