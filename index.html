@@ -262,8 +262,8 @@
       <div class="carousel">
         <div class="carousel-track" id="holidayTrack"></div>
         <div class="nav" aria-hidden="true">
-          <button class="prev" data-target="holidayTrack" aria-label="Previous">◀</button>
-          <button class="next" data-target="holidayTrack" aria-label="Next">▶</button>
+          <button class="prev" data-target="holidayTrack" aria-label="Previous" data-track="click" data-track-type="action" data-track-id="holidayPrev">◀</button>
+          <button class="next" data-target="holidayTrack" aria-label="Next" data-track="click" data-track-type="action" data-track-id="holidayNext">▶</button>
         </div>
       </div>
     </section>
@@ -273,8 +273,8 @@
       <div class="carousel">
         <div class="carousel-track" id="videoTrack"></div>
         <div class="nav" aria-hidden="true">
-          <button class="prev" data-target="videoTrack" aria-label="Previous">◀</button>
-          <button class="next" data-target="videoTrack" aria-label="Next">▶</button>
+          <button class="prev" data-target="videoTrack" aria-label="Previous" data-track="click" data-track-type="action" data-track-id="videoPrev">◀</button>
+          <button class="next" data-target="videoTrack" aria-label="Next" data-track="click" data-track-type="action" data-track-id="videoNext">▶</button>
         </div>
       </div>
     </section>
@@ -285,7 +285,7 @@
       <div class="footer-col">
         <h4>Stay in the loop</h4>
         <div class="newsletter">
-          <input id="email" type="email" placeholder="Enter your email" aria-label="Email address">
+          <input id="email" type="email" placeholder="Enter your email" aria-label="Email address" data-track="input" data-track-type="action" data-track-id="emailInput">
           <button class="btn primary" id="joinBtn" data-track="click" data-track-type="action" data-track-id="newsletterJoin">Join</button>
         </div>
         <p class="subhead" style="margin-top:8px;font-size:13px">By subscribing you agree to receive updates and promotions.</p>
@@ -314,7 +314,7 @@
     </div>
   </footer>
 
-  <button class="btn to-top" id="toTop" aria-label="Back to top">↑</button>
+  <button class="btn to-top" id="toTop" aria-label="Back to top" data-track="click" data-track-type="action" data-track-id="toTop">↑</button>
 
   <!-- Recipe Modal -->
   <div class="modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
@@ -820,7 +820,7 @@
       ].filter(Boolean).join('') : '<li>No nutrition data.</li>';
       // Gallery
       const g = (r.gallery && r.gallery.length ? r.gallery : [r.img]);
-      $('#modalGallery').innerHTML = g.map((src, i)=>`<img src="${src}" alt="${r.name} photo ${i+1}" ${i===0?'class="active"':''} loading="lazy">`).join('');
+      $('#modalGallery').innerHTML = g.map((src, i)=>`<img src="${src}" alt="${r.name} photo ${i+1}" ${i===0?'class="active"':''} loading="lazy" data-track="click view" data-track-type="action" data-track-id="galleryThumb" data-track-title="${r.name}">`).join('');
       $$('#modalGallery img').forEach((imgEl, idx) => {
         imgEl.addEventListener('click', () => {
           $('#modalImg').src = imgEl.src;
@@ -867,7 +867,7 @@
         $('#modalTitle').textContent = item.querySelector('.title').textContent;
         $('#modalSubtitle').textContent = 'Test Kitchen';
         $('#modalImg').src = item.querySelector('img').src; // poster
-        $('#modalIngredients').innerHTML = `<li><a href="${item.dataset.url}" target="_blank" rel="noopener">Open video on YouTube</a></li>`;
+        $('#modalIngredients').innerHTML = `<li><a href="${item.dataset.url}" target="_blank" rel="noopener" data-track="click" data-track-type="action" data-track-id="openVideo">Open video on YouTube</a></li>`;
         $('#modalSteps').innerHTML = '<li>Follow along and cook with us!</li>';
         $('#recipeModal').classList.add('active'); $('#recipeModal').removeAttribute('aria-hidden');
       }));
