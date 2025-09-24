@@ -42,7 +42,7 @@
   }
 
   function createData(){
-    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {} };
+    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {} };
   }
 
   function InterestStorage(storageKey){
@@ -54,6 +54,7 @@
         const obj = JSON.parse(raw);
         if (!obj || typeof obj !== 'object') return createData();
         if (!obj.buckets || typeof obj.buckets !== 'object') obj.buckets = {};
+        if (!obj.meta || typeof obj.meta !== 'object') obj.meta = {};
         return obj;
       } catch(e){ return createData(); }
     }
@@ -73,6 +74,13 @@
       map[key] = value;
       save();
     }
+    function setMeta(bucket, key, meta){
+      if (!bucket || !key || !meta) return;
+      const byBucket = (data.meta[bucket] || (data.meta[bucket] = {}));
+      const current = byBucket[key] || {};
+      byBucket[key] = Object.assign({}, current, meta);
+      save();
+    }
     function getTop(bucket, n){
       const map = data.buckets[bucket] || {};
       return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0, toNumber(n, 5));
@@ -81,7 +89,7 @@
     function exportJSON(){ return JSON.parse(JSON.stringify(data)); }
     function importJSON(obj){ if (obj && obj.buckets) { data = obj; save(); } }
     function reset(){ data = createData(); save(); }
-    return { inc, getTop, set, get, exportJSON, importJSON, reset };
+    return { inc, getTop, set, setMeta, get, exportJSON, importJSON, reset };
   }
 
   function debounce(fn, delay){ let t; return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this, args), delay); }; }
@@ -134,6 +142,26 @@
         this.scan(document);
       }
       return this;
+    },
+    _collectMeta(el){
+      const ds = el.dataset;
+      const reserved = new Set(['track','trackType','trackId','trackBucket','trackWeight']);
+      const meta = {};
+      Object.keys(ds).forEach(k => {
+        if (!k.startsWith('track')) return;
+        if (reserved.has(k)) return;
+        const prop = k.slice(5); // after 'track'
+        if (!prop) return;
+        const name = prop.charAt(0).toLowerCase() + prop.slice(1);
+        const raw = ds[k];
+        if (raw == null) return;
+        // parse simple types
+        if (/[|,]/.test(raw)) meta[name] = splitList(raw);
+        else if (/^\d+(?:\.\d+)?$/.test(raw)) meta[name] = Number(raw);
+        else if (raw === 'true' || raw === 'false') meta[name] = (raw === 'true');
+        else meta[name] = raw;
+      });
+      return meta;
     },
     scan(root){
       const scope = root || document;
@@ -189,8 +217,10 @@
           return;
         }
 
-        // Record the main item
-        this.record({ bucket, key, weight, meta: { event: eventType, type } });
+        // Record the main item and optional metadata
+        const meta = this._collectMeta(el);
+        meta.event = eventType; meta.type = type; meta.lastSeenAt = now();
+        this.record({ bucket, key, weight, meta });
 
         // Optional linked fields
         if (ds.trackCategory) this.record({ bucket: DEFAULT_BUCKETS.category, key: ds.trackCategory, weight: 1, meta: { via: type } });
@@ -208,9 +238,10 @@
       return 1;
     },
     // Public API
-    record({ bucket, key, weight = 1 /*, meta */ }){
+    record({ bucket, key, weight = 1, meta }){
       if (!this._storage) this.init();
       this._storage.inc(bucket, key, weight);
+      if (meta && typeof meta === 'object') this._storage.setMeta(bucket, key, meta);
       this._updateGlobalDataExposure();
     },
     recordTokens(bucket, value, weight = 1){
