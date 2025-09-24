@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Arcadia — Discover Great Games</title>
+  <meta name="description" content="Sleek single-file video games site with search, filters, trailers, and favorites.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#0f1630; --card:#111a38; --text:#e6eaf7; --muted:#97a0bf;
+      --neon:#60a5fa; --neon-2:#22d3ee; --accent:#f472b6; --ring:rgba(96,165,250,.35);
+      --shadow:0 10px 30px rgba(0,0,0,.5); --radius:16px; --max:1200px;
+      --games-hero: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop');
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui;-webkit-font-smoothing:antialiased;background:radial-gradient(900px 400px at 20% -100px,rgba(96,165,250,.18),transparent 60%),radial-gradient(800px 360px at 90% -100px,rgba(34,211,238,.18),transparent 60%),var(--bg);color:var(--text)}
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+    .announcement{background:linear-gradient(90deg,rgba(96,165,250,.12),rgba(244,114,182,.10));border-bottom:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:14px}
+    .announcement-inner{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;padding:10px 0;align-items:center}
+    header{position:sticky;top:0;z-index:40;background:rgba(11,16,32,.6);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .top{display:grid;grid-template-columns:200px 1fr auto;gap:14px;align-items:center;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-family:Syne,system-ui;font-weight:800;letter-spacing:.5px}
+    .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 200deg,#60a5fa,#22d3ee,#60a5fa);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+    .search{position:relative}
+    .search input{width:100%;border:1px solid rgba(255,255,255,.08);background:var(--panel);color:var(--text);border-radius:12px;padding:12px 40px;outline:none}
+    .search input:focus{box-shadow:0 0 0 6px var(--ring)}
+    .search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .btn{border:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,#60a5fa,#22d3ee);color:#0b1020;border-radius:12px;padding:10px 12px;cursor:pointer}
+    nav .chips{display:flex;gap:12px;overflow:auto;padding:10px 0}
+    .chip{white-space:nowrap;border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px;background:var(--panel);color:var(--muted)}
+    .chip.active{background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(34,211,238,.18));color:#bfe1ff}
+    .hero{padding:40px 0}
+    .hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+    h1{font-family:Syne,system-ui;font-size:clamp(32px,6vw,56px);margin:0;letter-spacing:.3px}
+    .sub{color:var(--muted)} .cta{display:flex;gap:12px;margin-top:14px}
+    .poster{border-radius:22px;box-shadow:var(--shadow);height:clamp(240px,34vw,420px);background:
+      linear-gradient( to bottom right, rgba(96,165,250,.25), rgba(34,211,238,.25) ),
+      var(--games-hero) center/cover no-repeat}
+    .filters{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-top:8px}
+    .select{border:1px solid rgba(255,255,255,.08);padding:10px 12px;border-radius:10px;background:var(--panel);color:var(--muted)}
+    .section{padding:30px 0}
+    .section h2{font-family:Syne,system-ui;margin:0 0 14px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero-inner{grid-template-columns:1fr}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}}
+    .card{position:relative;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s ease}
+    .card:hover{transform:translateY(-6px)}
+    .card img{aspect-ratio:16/9;object-fit:cover;width:100%}
+    .card-body{padding:12px 14px 14px}
+    .meta{display:flex;gap:10px;color:var(--muted);font-size:13px}
+    .title{font-weight:700;margin:6px 0 8px}
+    .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(96,165,250,.18);border:1px solid rgba(96,165,250,.28);color:#bfe1ff}
+    .fav{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(11,16,32,.6);display:grid;place-items:center}
+    .fav.active{background:#f43f5e;color:white}
+    .carousel{position:relative}
+    .track{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+    .item{scroll-snap-align:start;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+    .nav{position:absolute;inset:0;pointer-events:none}
+    .nav button{pointer-events:all;position:absolute;top:50%;transform:translateY(-50%);border:none;width:42px;height:42px;border-radius:999px;background:linear-gradient(180deg,#142147,#0f1630);color:var(--text)}
+    .prev{left:-10px}.next{right:-10px}
+    footer{border-top:1px solid rgba(255,255,255,.06);background:#0a0f1e;margin-top:28px}
+    .footer{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px;padding:28px 0}
+    @media(max-width:900px){.footer{grid-template-columns:1fr 1fr}} @media(max-width:600px){.footer{grid-template-columns:1fr}}
+
+    /* Modal extras */
+    .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 10px}
+    .info-item{border:1px solid rgba(255,255,255,.08);background:var(--card);border-radius:10px;padding:8px 10px;text-align:center;box-shadow:var(--shadow)}
+    .info-item b{display:block;font-size:14px}
+    .info-item span{display:block;color:var(--muted);font-size:12px}
+    .gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .gallery img{width:78px;height:78px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.12);cursor:pointer;opacity:.9;transition:transform .1s ease,opacity .15s ease}
+    .gallery img:hover{transform:translateY(-1px);opacity:1;box-shadow:var(--shadow)}
+    .gallery img.active{outline:2px solid var(--neon);opacity:1}
+    .chips-list{display:flex;gap:8px;flex-wrap:wrap}
+    .chip-tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(244,114,182,.18);border:1px solid rgba(244,114,182,.28);color:#ffd6ea}
+  </style>
+</head>
+<body>
+  <div class="announcement"><div class="container announcement-inner"><div>Weekend Sale</div><div>Up to 60% off top titles</div><div style="justify-self:end">New releases weekly →</div></div></div>
+  <header>
+    <div class="container top">
+      <a class="brand" href="#"><span class="logo"></span><span>Arcadia</span></a>
+      <label class="search" for="gSearch"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg><input id="gSearch" type="search" placeholder="Search games, genres, studios…" autocomplete="off" data-track="input" data-track-type="search"></label>
+      <button class="btn" id="gFavBtn" data-track="click" data-track-type="action" data-track-id="viewFavorites">Favorites <span id="gFavCount">0</span></button>
+    </div>
+    <nav><div class="container chips" id="genreChips"></div></nav>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div class="hero-inner">
+        <div>
+          <h1>Discover Great Games</h1>
+          <p class="sub">Find your next adventure: filter by genre, platform, or hype, watch trailers, and save favorites.</p>
+          <div class="cta"><a href="#games" class="btn" data-track="click" data-track-type="section">Browse Games</a><button class="btn" id="gRandom" data-track="click" data-track-type="action" data-track-id="randomGame">Surprise Me</button></div>
+        </div>
+        <div class="poster" aria-hidden="true"></div>
+      </div>
+      <div class="filters container" style="padding-top:10px">
+        <div></div>
+        <select id="platform" class="select" data-track="change" data-track-type="action" data-track-id="platformSelect"><option value="">All Platforms</option><option>PC</option><option>PlayStation</option><option>Xbox</option><option>Nintendo</option></select>
+        <select id="sort" class="select" data-track="change" data-track-type="action" data-track-id="sortSelect"><option value="pop">Most Popular</option><option value="new">Newest</option><option value="time">Shortest</option></select>
+      </div>
+    </section>
+
+    <section id="games" class="container section">
+      <h2>Top Picks</h2>
+      <div class="grid" id="gGrid"></div>
+    </section>
+
+    <section class="container section">
+      <h2>Trailers</h2>
+      <div class="carousel"><div class="track" id="tTrack"></div><div class="nav" aria-hidden="true"><button class="prev" data-target="tTrack" data-track="click" data-track-type="action" data-track-id="trailerPrev">◀</button><button class="next" data-target="tTrack" data-track="click" data-track-type="action" data-track-id="trailerNext">▶</button></div></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer">
+      <div><h4>Newsletter</h4><div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input id="gEmail" placeholder="you@player.gg" class="select" data-track="input" data-track-type="action" data-track-id="emailInput"><button class="btn" id="gJoin" data-track="click" data-track-type="action" data-track-id="newsletterJoin">Join</button></div></div>
+      <div><h4>Genres</h4><a href="#">Action</a><a href="#">Adventure</a><a href="#">RPG</a><a href="#">Indie</a></div>
+      <div><h4>Platforms</h4><a href="#">PC</a><a href="#">PlayStation</a><a href="#">Xbox</a><a href="#">Nintendo</a></div>
+      <div><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Press</a></div>
+    </div>
+  </footer>
+
+  <div id="gModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:60">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)"></div>
+    <div id="gDialog" style="position:relative;background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow);width:min(900px,92vw);max-height:86vh;overflow:auto">
+      <div style="position:sticky;top:0;background:inherit;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;padding:14px 18px"><div><h3 id="gTitle" style="margin:0">Game</h3><div id="gMeta" style="color:var(--muted);font-size:14px"></div></div><button id="gClose" class="btn" style="background:linear-gradient(135deg,#f43f5e,#fb7185);color:white;border:none">Close</button></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:16px 18px 22px">
+        <div>
+          <img id="gImg" alt="" style="width:100%;border-radius:12px">
+          <div class="info-grid" id="gInfo"></div>
+          <div class="gallery" id="gGallery"></div>
+        </div>
+        <div>
+          <h4>About</h4>
+          <p id="gAbout" style="color:var(--muted)"></p>
+          <div class="chips-list" id="gTags"></div>
+          <h4>Key Features</h4>
+          <ul id="gFeatures" style="line-height:1.7"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic interest tracking framework -->
+  <script src="./interest-kit.js"></script>
+
+  <script>
+    const $=(s,e=document)=>e.querySelector(s); const $$=(s,e=document)=>Array.from(e.querySelectorAll(s));
+    const gState={q:'',genre:'All',platform:'',sort:'pop',favs:new Set(JSON.parse(localStorage.getItem('arcadia:favs')||'[]'))};
+    const GENRES=['All','Action','Adventure','RPG','Shooter','Sports','Indie','Strategy'];
+    const GAMES=[
+      {id:'stellar-odyssey',name:'Stellar Odyssey',genre:'Adventure',platform:'PC',time:40,rating:4.8,pop:98,
+        img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Open World','Space'], about:'Chart your path across a handcrafted galaxy and uncover ancient mysteries.',
+        features:['Vast galaxy to explore','Choices that matter','Photo mode'],
+        studio:'NovaWorks', release:'2025-03-15', platforms:['PC']},
+      {id:'neon-rush',name:'Neon Rush',genre:'Action',platform:'PlayStation',time:6,rating:4.5,pop:92,
+        img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Arcade','Speed'], about:'Lightning‑fast racing through cyber city streets with reactive synth beats.',
+        features:['Split‑screen','Track editor','Online leaderboards'],
+        studio:'PulseDrive', release:'2024-11-02', platforms:['PlayStation','PC']},
+      {id:'arc-wizard',name:'Arc Wizard',genre:'RPG',platform:'Nintendo',time:60,rating:4.7,pop:90,
+        img:'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Magic','Co‑op'], about:'Combine elemental spells to solve puzzles and battle ancient guardians.',
+        features:['2‑player co‑op','Skill trees','Boss rush'],
+        studio:'Arc Forge', release:'2025-05-09', platforms:['Nintendo']},
+      {id:'field-legend',name:'Field Legend 24',genre:'Sports',platform:'Xbox',time:12,rating:4.1,pop:82,
+        img:'https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Multiplayer'], about:'A deep career mode with authentic stadium atmosphere and physics.',
+        features:['Career & franchise','Online seasons','Training camp'],
+        studio:'Stadium Labs', release:'2024-08-20', platforms:['Xbox','PC']},
+      {id:'void-strike',name:'Void Strike',genre:'Shooter',platform:'PC',time:10,rating:4.6,pop:95,
+        img:'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1520974735194-6a28aefc2b19?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Roguelite'], about:'Tight movement and stylish gunplay in an ever‑shifting alien labyrinth.',
+        features:['Procedural arenas','Tactical builds','Daily challenges'],
+        studio:'Singularity', release:'2024-12-12', platforms:['PC','Xbox']},
+      {id:'tiny-kingdom',name:'Tiny Kingdom',genre:'Strategy',platform:'PC',time:20,rating:4.4,pop:80,
+        img:'https://images.unsplash.com/photo-1517420704952-d9f39e95b43f?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1517420704952-d9f39e95b43f?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['City‑builder'], about:'Grow a cozy medieval town into a thriving stronghold with charming visuals.',
+        features:['Villager simulation','Seasons & festivals','Mod support'],
+        studio:'Pinecone', release:'2025-01-30', platforms:['PC','Nintendo']},
+      {id:'skyline-drifters',name:'Skyline Drifters',genre:'Racing',platform:'PC',time:8,rating:4.2,pop:83,
+        img:'https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200&auto=format&fit=crop',
+        gallery:[
+          'https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?q=80&w=1200&auto=format&fit=crop'
+        ],
+        tags:['Drift','Arcade'], about:'Drift neon‑lit skylines with buttery handling and deep customization.',
+        features:['Car tuning','Replay system','Online drift battles'],
+        studio:'Slipstream', release:'2025-02-10', platforms:['PC','PlayStation']}
+    ];
+    const TRAILERS=[
+      {title:'Stellar Odyssey — Trailer',thumb:'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
+      {title:'Neon Rush — Launch',thumb:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop',url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
+      {title:'Void Strike — Gameplay',thumb:'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop',url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+    ];
+
+    function save(){ localStorage.setItem('arcadia:favs', JSON.stringify([...gState.favs])); $('#gFavCount').textContent=gState.favs.size; }
+    function rating(r){ const full=Math.floor(r), half=r-full>=.5; return '★★★★★'.slice(0,full)+(half?'½':''); }
+    function renderGenres(){ const box=$('#genreChips'); box.innerHTML=''; GENRES.forEach(g=>{ const b=document.createElement('button'); b.className='chip'+(gState.genre===g?' active':''); b.textContent=g; b.addEventListener('click',()=>{gState.genre=g; renderGrid();}); box.appendChild(b); }); }
+    function filterSort(list){ const q=gState.q.toLowerCase(); let out=list.filter(x=>(!q||x.name.toLowerCase().includes(q)||x.tags.some(t=>t.toLowerCase().includes(q))) && (gState.genre==='All'||x.genre===gState.genre) && (!gState.platform||x.platform===gState.platform)); if(gState.sort==='new') out=out.slice().reverse(); if(gState.sort==='time') out=out.slice().sort((a,b)=>a.time-b.time); if(gState.sort==='pop') out=out.slice().sort((a,b)=>b.pop-a.pop); return out; }
+    function card(g){ const fav=gState.favs.has(g.id); return `
+      <article class="card" data-id="${g.id}" role="button" aria-label="Open ${g.name}"
+               data-track="click view" data-track-type="game" data-track-id="${g.id}"
+               data-track-title="${g.name}" data-track-genre="${g.genre}" data-track-platform="${g.platform}">
+        <img src="${g.img}" alt="${g.name}" loading="lazy" decoding="async">
+        <button class="fav ${fav?'active':''}" data-fav="${g.id}" data-track="click" data-track-type="action" data-track-id="favorite" data-track-title="${g.name}">❤</button>
+        <div class="card-body">
+          <div class="tag">${g.genre}</div>
+          <div class="title">${g.name}</div>
+          <div class="meta"><span>⏱ ${g.time} h</span><span>•</span><span>${rating(g.rating)}</span></div>
+        </div>
+      </article>`; }
+    function renderGrid(){ const list=filterSort(GAMES); $('#gGrid').innerHTML=list.map(card).join(''); $$('#gGrid .fav').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation(); const id=b.dataset.fav; if(gState.favs.has(id)) gState.favs.delete(id); else gState.favs.add(id); b.classList.toggle('active'); save();})); $$('#gGrid .card').forEach(c=>c.addEventListener('click',()=>openGame(c.dataset.id))); }
+    function openGame(id){
+      const g=GAMES.find(x=>x.id===id); if(!g) return;
+      $('#gTitle').textContent=g.name;
+      $('#gMeta').textContent=[g.genre,g.platform, g.studio?('• '+g.studio):'', g.release?('• '+g.release):''].filter(Boolean).join(' ');
+      $('#gImg').src=g.img; $('#gImg').alt=g.name;
+      $('#gAbout').textContent=g.about;
+      $('#gFeatures').innerHTML=g.features.map(f=>`<li>${f}</li>`).join('');
+      // tags
+      $('#gTags').innerHTML=(g.tags||[]).map(t=>`<span class="chip-tag">${t}</span>`).join('');
+      // info grid
+      $('#gInfo').innerHTML=`
+        <div class="info-item"><b>${g.time} h</b><span>Length</span></div>
+        <div class="info-item"><b>${g.rating}</b><span>Rating</span></div>
+        <div class="info-item"><b>${g.pop}</b><span>Popularity</span></div>
+        <div class="info-item"><b>${(g.platforms||[g.platform]).join(', ')}</b><span>Platforms</span></div>
+      `;
+      // gallery
+      const gallery=(g.gallery&&g.gallery.length?g.gallery:[g.img]);
+      $('#gGallery').innerHTML=gallery.map((src,i)=>`<img src="${src}" alt="${g.name} screenshot ${i+1}" ${i===0?'class="active"':''} loading="lazy" data-track="click view" data-track-type="action" data-track-id="galleryThumb" data-track-title="${g.name}">`).join('');
+      $$('#gGallery img').forEach((imgEl)=>{ imgEl.addEventListener('click',()=>{ $('#gImg').src=imgEl.src; $$('#gGallery img').forEach(m=>m.classList.remove('active')); imgEl.classList.add('active'); }); });
+      $('#gModal').style.display='flex'; $('#gClose').focus();
+    }
+    function close(){ $('#gModal').style.display='none'; }
+    function renderTrailers(){ const t=$('#tTrack'); t.innerHTML=TRAILERS.map(v=>`<article class="item" role="button" data-url="${v.url}" data-track="click view" data-track-type="trailer" data-track-id="${v.title}" data-track-title="${v.title}"><img src="${v.thumb}" alt="${v.title}" loading="lazy" decoding="async"><div class="card-body"><div class="title">${v.title}</div><div class="meta">▶ Watch</div></div></article>`).join(''); $$('#tTrack .item').forEach(i=>i.addEventListener('click',()=>{ window.open(i.dataset.url,'_blank','noopener'); })); }
+    function wire(){ $('#gSearch').addEventListener('input',e=>{gState.q=e.target.value; renderGrid();}); $('#platform').addEventListener('input',e=>{gState.platform=e.target.value; renderGrid();}); $('#sort').addEventListener('input',e=>{gState.sort=e.target.value; renderGrid();}); $('#gRandom').addEventListener('click',()=>{const r=GAMES[Math.floor(Math.random()*GAMES.length)]; openGame(r.id);}); $('#gFavBtn').addEventListener('click',()=>{ if(gState.favs.size===0) return alert('No favorites yet.'); const list=GAMES.filter(g=>gState.favs.has(g.id)); $('#gGrid').innerHTML=list.map(card).join(''); }); $$('.prev,.next').forEach(b=>b.addEventListener('click',()=>{ const el=document.getElementById(b.dataset.target); const d=b.classList.contains('prev')?-1:1; const w=el.clientWidth; el.scrollBy({left:d*(w-80),behavior:'smooth'}); })); $('#gClose').addEventListener('click',close); $('#gModal').addEventListener('click',e=>{ if(e.target.id==='gModal') close(); }); document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); }); $('#gJoin').addEventListener('click',()=>{ const email=$('#gEmail').value.trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert('Enter a valid email.'); alert('Welcome to Arcadia!'); $('#gEmail').value=''; }); }
+    // Init
+    (function(){ renderGenres(); renderGrid(); renderTrailers(); wire(); save();
+      // Validate hero image and fallback to gradient if it fails
+      const css=getComputedStyle(document.documentElement).getPropertyValue('--games-hero').trim();
+      const m=css.match(/url\(("|')?(.*?)("|')?\)/); if(m){ const src=m[2]; const img=new Image(); img.onerror=()=>{ document.documentElement.style.setProperty('--games-hero','linear-gradient(135deg,#0f1630,#111a38)'); }; img.src=src; }
+    })();
+  </script>
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			agentforce_messaging.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+			agentforce_messaging.settings.devMode = true;
+			agentforce_messaging.init(
+				'00DSB00000a7RbR',
+				'CWCMessaging',
+				'https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937',
+				{
+					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js'' onload='initEmbeddedMessaging()'></script>
+
+</body>
+</html>
+
+
