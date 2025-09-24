@@ -184,23 +184,23 @@
       </a>
       <label class="search" for="searchInput">
         <svg class="icon" width="18" height="18" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
-        <input id="searchInput" type="search" placeholder="Search recipes, chefs, ingredients…" autocomplete="off" aria-label="Search recipes">
+        <input id="searchInput" type="search" placeholder="Search recipes, chefs, ingredients…" autocomplete="off" aria-label="Search recipes" data-track="input" data-track-type="search">
       </label>
       <div class="actions">
-        <button class="btn" id="favoritesBtn" aria-label="View favorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.4-8.3C1 9.6 2.6 6.8 5.4 6.2c1.9-.4 3.8.3 4.9 1.8 1.1-1.6 3-2.3 4.9-1.8 2.7.6 4.4 3.4 2.8 6.5C19.5 16.3 12 21 12 21z"/></svg><span id="favCount" aria-live="polite">0</span></button>
-        <button class="btn primary" id="subscribeBtn">Subscribe</button>
+        <button class="btn" id="favoritesBtn" aria-label="View favorites" data-track="click" data-track-type="action" data-track-id="viewFavorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.4-8.3C1 9.6 2.6 6.8 5.4 6.2c1.9-.4 3.8.3 4.9 1.8 1.1-1.6 3-2.3 4.9-1.8 2.7.6 4.4 3.4 2.8 6.5C19.5 16.3 12 21 12 21z"/></svg><span id="favCount" aria-live="polite">0</span></button>
+        <button class="btn primary" id="subscribeBtn" data-track="click" data-track-type="action" data-track-id="subscribeClick">Subscribe</button>
       </div>
     </div>
     <nav class="main-nav" aria-label="Primary">
       <div class="container nav-inner">
-        <a class="chip" href="#" aria-current="page">New</a>
-        <a class="chip" href="#recipes">Recipes</a>
-        <a class="chip" href="#holiday">Holiday Meals</a>
-        <a class="chip" href="#videos">Test Kitchen</a>
-        <a class="chip" href="#cocktails">Cocktails</a>
-        <a class="chip" href="#cookbooks">Cookbooks</a>
-        <a class="chip" href="#gifts">Gifts</a>
-        <a class="chip" href="#sale">Sale</a>
+        <a class="chip" href="#" aria-current="page" data-track="click" data-track-type="section">New</a>
+        <a class="chip" href="#recipes" data-track="click" data-track-type="section">Recipes</a>
+        <a class="chip" href="#holiday" data-track="click" data-track-type="section">Holiday Meals</a>
+        <a class="chip" href="#videos" data-track="click" data-track-type="section">Test Kitchen</a>
+        <a class="chip" href="#cocktails" data-track="click" data-track-type="section">Cocktails</a>
+        <a class="chip" href="#cookbooks" data-track="click" data-track-type="section">Cookbooks</a>
+        <a class="chip" href="#gifts" data-track="click" data-track-type="section">Gifts</a>
+        <a class="chip" href="#sale" data-track="click" data-track-type="section">Sale</a>
       </div>
     </nav>
   </header>
@@ -212,8 +212,8 @@
           <h1 id="heroTitle" class="headline">Recipes & Cooking Ideas</h1>
           <p class="subhead">Explore the season’s most-loved dishes, step‑by‑step guides, and chef tips designed to inspire and delight every cook at home.</p>
           <div class="hero-cta">
-            <a href="#recipes" class="btn primary">Browse Recipes</a>
-            <button class="btn" id="randomBtn">I’m Feeling Hungry</button>
+            <a href="#recipes" class="btn primary" data-track="click" data-track-type="section">Browse Recipes</a>
+            <button class="btn" id="randomBtn" data-track="click" data-track-type="action" data-track-id="randomHungry">I’m Feeling Hungry</button>
           </div>
           <div class="statbar">
             <div class="stat"><b id="statRecipes">0</b><span>Recipes</span></div>
@@ -229,14 +229,14 @@
       <h2 id="recipesTitle">Explore Recipes</h2>
       <div class="filters" role="region" aria-label="Recipe filters">
         <div class="chips" id="categoryChips"></div>
-        <select id="dietSelect" class="select" aria-label="Diet">
+        <select id="dietSelect" class="select" aria-label="Diet" data-track="change" data-track-type="diet">
           <option value="">All Diets</option>
           <option>Vegetarian</option>
           <option>Vegan</option>
           <option>Gluten‑Free</option>
           <option>Keto</option>
         </select>
-        <select id="sortSelect" class="select" aria-label="Sort">
+        <select id="sortSelect" class="select" aria-label="Sort" data-track="change" data-track-type="action" data-track-id="sort">
           <option value="pop">Most Popular</option>
           <option value="new">Newest</option>
           <option value="time">Quickest</option>
@@ -275,7 +275,7 @@
         <h4>Stay in the loop</h4>
         <div class="newsletter">
           <input id="email" type="email" placeholder="Enter your email" aria-label="Email address">
-          <button class="btn primary" id="joinBtn">Join</button>
+          <button class="btn primary" id="joinBtn" data-track="click" data-track-type="action" data-track-id="newsletterJoin">Join</button>
         </div>
         <p class="subhead" style="margin-top:8px;font-size:13px">By subscribing you agree to receive updates and promotions.</p>
       </div>
@@ -329,6 +329,9 @@
     </div>
   </div>
 
+  <!-- Generic interest tracking framework -->
+  <script src="./interest-kit.js"></script>
+
   <script>
     const $ = (sel, el=document) => el.querySelector(sel);
     const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
@@ -339,6 +342,8 @@
       diet: '',
       sort: 'pop'
     };
+
+    function debounce(fn, delay){ let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), delay); }; }
 
     const CATEGORIES = ['All','Appetizers','Soups','Salads','Pasta','Seafood','Chicken','Beef','Vegan','Desserts'];
     const RECIPES = [
@@ -382,6 +387,66 @@
         tags: ['Fall','Baking'],
         ingredients: ['Brownie batter','Pumpkin purée','Cream cheese','Sugar','Spices'],
         steps: ['Layer brownie batter in pan.','Dollop pumpkin mix and swirl.','Bake until set.'] },
+      { id: 'tomato-basil-soup', name: 'Tomato Basil Soup', category: 'Soups', diet: 'Vegetarian', time: 25, rating: 4.5, pop: 86,
+        img: 'https://images.unsplash.com/photo-1543352634-8732e49e4a2c?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Comfort','Quick'],
+        ingredients: ['Tomatoes','Basil','Garlic','Vegetable stock','Cream'],
+        steps: ['Simmer tomatoes with garlic and stock.','Blend smooth and finish with cream.'] },
+      { id: 'bruschetta', name: 'Tomato Basil Bruschetta', category: 'Appetizers', diet: 'Vegetarian', time: 15, rating: 4.4, pop: 79,
+        img: 'https://images.unsplash.com/photo-1606857521015-7f9fcf4235df?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Entertaining'],
+        ingredients: ['Baguette','Tomatoes','Basil','Olive oil','Garlic'],
+        steps: ['Toast slices.','Top with tomato basil mixture and drizzle oil.'] },
+      { id: 'pesto-pasta', name: 'Pesto Tagliatelle', category: 'Pasta', diet: 'Vegetarian', time: 20, rating: 4.6, pop: 90,
+        img: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Weeknight'],
+        ingredients: ['Tagliatelle','Basil pesto','Parmesan','Pine nuts'],
+        steps: ['Cook pasta.','Toss with pesto and top with parmesan and nuts.'] },
+      { id: 'garlic-shrimp', name: 'Garlic Butter Shrimp', category: 'Seafood', diet: '', time: 12, rating: 4.7, pop: 93,
+        img: 'https://images.unsplash.com/photo-1523365280197-f1783db9fe62?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Quick','Skillet'],
+        ingredients: ['Shrimp','Butter','Garlic','Parsley','Lemon'],
+        steps: ['Sauté garlic in butter.','Cook shrimp 2–3 min each side.','Finish with lemon.'] },
+      { id: 'lemon-chicken', name: 'Lemon Herb Roast Chicken', category: 'Chicken', diet: '', time: 60, rating: 4.8, pop: 95,
+        img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Roast','Sunday'],
+        ingredients: ['Whole chicken','Lemon','Thyme','Butter','Salt'],
+        steps: ['Rub with butter, lemon and herbs.','Roast until golden and juicy.'] },
+      { id: 'gourmet-burger', name: 'Gourmet Beef Burger', category: 'Beef', diet: '', time: 25, rating: 4.6, pop: 88,
+        img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Grill','Cheesy'],
+        ingredients: ['Ground beef','Buns','Cheese','Onion','Sauce'],
+        steps: ['Form patties and season.','Grill and assemble with toppings.'] },
+      { id: 'quinoa-bowl', name: 'Rainbow Quinoa Bowl', category: 'Vegan', diet: 'Vegan', time: 22, rating: 4.4, pop: 81,
+        img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Healthy','Bowl'],
+        ingredients: ['Quinoa','Veggies','Tahini','Lemon'],
+        steps: ['Cook quinoa.','Toss with veggies and dressing.'] },
+      { id: 'berry-cheesecake', name: 'No‑Bake Berry Cheesecake', category: 'Desserts', diet: 'Vegetarian', time: 240, rating: 4.7, pop: 89,
+        img: 'https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Chilled','Make‑Ahead'],
+        ingredients: ['Cream cheese','Berries','Graham crust','Sugar'],
+        steps: ['Whip filling and pour into crust.','Chill and top with berries.'] },
+      { id: 'greek-salad', name: 'Crisp Greek Salad', category: 'Salads', diet: 'Vegetarian', time: 10, rating: 4.5, pop: 84,
+        img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Fresh','No‑Cook'],
+        ingredients: ['Tomato','Cucumber','Feta','Olives','Oregano'],
+        steps: ['Chop and toss with olive oil and oregano.'] },
+      { id: 'sushi-rolls', name: 'Simple Sushi Rolls', category: 'Seafood', diet: '', time: 50, rating: 4.3, pop: 76,
+        img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Skill','Entertaining'],
+        ingredients: ['Sushi rice','Nori','Fillings','Soy sauce'],
+        steps: ['Spread rice on nori.','Add fillings, roll, slice.'] },
+      { id: 'pancakes', name: 'Fluffy Pancakes', category: 'Desserts', diet: 'Vegetarian', time: 20, rating: 4.6, pop: 87,
+        img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Brunch'],
+        ingredients: ['Flour','Eggs','Milk','Baking powder','Sugar'],
+        steps: ['Mix batter.','Cook on griddle until golden.'] },
+      { id: 'avocado-toast', name: 'Avocado Toast', category: 'Appetizers', diet: 'Vegan', time: 8, rating: 4.2, pop: 74,
+        img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop',
+        tags: ['Breakfast','Simple'],
+        ingredients: ['Bread','Avocado','Lemon','Chili flakes'],
+        steps: ['Toast bread.','Mash avocado with lemon and spread; season.'] },
     ];
 
     const HOLIDAY = [
@@ -416,6 +481,7 @@
         const a = document.createElement('button');
         a.className = 'chip' + (state.category === cat ? ' active' : '');
         a.type = 'button'; a.textContent = cat; a.setAttribute('aria-pressed', state.category === cat);
+        a.dataset.track = 'click'; a.dataset.trackType = 'category'; a.dataset.trackId = cat;
         a.addEventListener('click', () => { state.category = cat; renderGrid(); });
         box.appendChild(a);
       });
@@ -437,10 +503,14 @@
     function recipeCard(r) {
       const fav = state.favorites.has(r.id);
       return `
-        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}">
+        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}"
+                 data-track="click view" data-track-type="recipe" data-track-id="${r.id}"
+                 data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}">
           <span class="label">${r.tags[0] || 'Featured'}</span>
           <img src="${r.img}" alt="${r.name}" loading="lazy" decoding="async">
-          <button class="fav ${fav ? 'active' : ''}" aria-label="Favorite ${r.name}" data-fav="${r.id}">❤</button>
+          <button class="fav ${fav ? 'active' : ''}" aria-label="Favorite ${r.name}" data-fav="${r.id}"
+                  data-track="click" data-track-type="action" data-track-id="favorite" data-track-label="${r.id}"
+                  data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}">❤</button>
           <div class="card-body">
             <div class="tag">${r.category}</div>
             <div class="title">${r.name}</div>
@@ -502,7 +572,8 @@
     function renderVideos() {
       const track = $('#videoTrack');
       track.innerHTML = VIDEOS.map(v=>`
-        <article class="carousel-item" role="button" aria-label="Play ${v.title}" data-url="${v.url}">
+        <article class="carousel-item" role="button" aria-label="Play ${v.title}" data-url="${v.url}"
+                 data-track="click view" data-track-type="video" data-track-id="${v.title}">
           <img src="${v.thumb}" alt="${v.title}" loading="lazy" decoding="async">
           <div class="card-body">
             <div class="title">${v.title}</div>
@@ -548,7 +619,7 @@
         const list = RECIPES.filter(r=>state.favorites.has(r.id));
         $('#grid').innerHTML = list.map(recipeCard).join('');
       });
-      $('#subscribeBtn').addEventListener('click', ()=> alert('Thanks for your interest! Newsletter coming soon.'));
+      $('#subscribeBtn').addEventListener('click', ()=> { alert('Thanks for your interest! Newsletter coming soon.'); });
       $('#joinBtn').addEventListener('click', ()=> {
         const email = $('#email').value.trim();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert('Enter a valid email.');
@@ -628,24 +699,6 @@
       img.src = src;
     })();
   </script>
-<script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			agentforce_messaging.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
-			agentforce_messaging.settings.devMode = true;
-			agentforce_messaging.init(
-				'00DSB00000a7RbR',
-				'CWCMessaging',
-				'https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937',
-				{
-					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
-</script>
 <script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js'' onload='initEmbeddedMessaging()'></script>
 </body>
 </html>
