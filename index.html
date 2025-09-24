@@ -3,8 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="Content-Security-Policy" 
-      content="connect-src 'self' https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce.com">
   <meta name="color-scheme" content="light">
   <title>Culina — Recipes & Cooking Ideas</title>
   <meta name="description" content="Beautiful, modern recipe website with search, filters, favorites, and curated holiday menus.">
@@ -151,6 +149,17 @@
     .dialog .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
     .dialog ul { margin: 0; padding-left: 18px; line-height: 1.7; }
     .close { border: 1px solid rgba(100,116,139,.18); background: var(--elevated); border-radius: 10px; width: 36px; height: 36px; display: grid; place-items: center; }
+
+    /* Modal extras */
+    .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 6px; }
+    .info-item { border: 1px solid rgba(100,116,139,.14); background: var(--elevated); border-radius: 10px; padding: 8px 10px; text-align: center; box-shadow: var(--shadow-sm); }
+    .info-item b { display: block; font-size: 14px; }
+    .info-item span { display: block; color: var(--muted); font-size: 12px; }
+    .gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .gallery img { width: 78px; height: 78px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(100,116,139,.18); cursor: pointer; opacity: .9; transition: transform .1s ease, opacity .15s ease; }
+    .gallery img:hover { transform: translateY(-1px); opacity: 1; box-shadow: var(--shadow-sm); }
+    .gallery img.active { outline: 2px solid var(--brand); opacity: 1; }
+    .nutrition { margin: 0; padding-left: 18px; line-height: 1.7; }
 
     /* Footer */
     footer { border-top: 1px solid rgba(100,116,139,.12); background: var(--surface); margin-top: 28px; }
@@ -320,12 +329,17 @@
       <div class="body">
         <div>
           <img id="modalImg" alt="">
+          <div class="info-grid" id="modalInfo"></div>
+          <p id="modalDesc" class="subhead" style="margin-top:6px"></p>
+          <div class="gallery" id="modalGallery"></div>
         </div>
         <div>
           <h4>Ingredients</h4>
           <ul id="modalIngredients"></ul>
           <h4>Steps</h4>
           <ol id="modalSteps"></ol>
+          <h4>Nutrition</h4>
+          <ul id="modalNutrition" class="nutrition"></ul>
         </div>
       </div>
     </div>
@@ -351,104 +365,339 @@
     const RECIPES = [
       { id: 'pumpkin-soup', name: 'Roasted Pumpkin & Chickpea Soup', category: 'Soups', diet: 'Vegetarian', time: 35, rating: 4.8, pop: 99,
         img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1484980859177-5ac1249fda89?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1543339308-43f0b6b16d8b?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Creamy roasted pumpkin soup with protein-packed chickpeas and warm spices.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 280, protein: '9g', fat: '11g', carbs: '38g' },
         tags: ['Fall','One‑Pot'],
         ingredients: ['1 tbsp olive oil','1 onion, chopped','2 cups pumpkin, roasted','1 cup chickpeas','3 cups vegetable stock','1 tsp cumin','Salt & pepper'],
-        steps: ['Sauté onion in oil until soft.','Add pumpkin and chickpeas; cook 3 minutes.','Pour in stock and simmer 12 minutes.','Blend until smooth; season to taste.'] },
+        steps: [
+          'Preheat oven to 400°F and roast pumpkin until tender.',
+          'Warm oil in a pot; sauté chopped onion 4–5 minutes until translucent.',
+          'Stir in cumin and a pinch of chili; cook 30 seconds until fragrant.',
+          'Add roasted pumpkin and chickpeas; toss to coat with aromatics.',
+          'Pour in vegetable stock; bring to a boil, then simmer 12 minutes.',
+          'Blend with an immersion blender until silky and smooth.',
+          'Adjust seasoning with salt and pepper; thin with stock if needed.',
+          'Ladle into bowls and garnish with olive oil, seeds, and herbs.'
+        ] },
       { id: 'diwali-thali', name: 'Spiced Lentil & Paneer Thali', category: 'Vegan', diet: 'Vegetarian', time: 40, rating: 4.7, pop: 94,
         img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1505577058444-a3dab90d4253?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Festive thali with spiced red lentils and sautéed paneer for a satisfying plate.',
+        servings: 3,
+        difficulty: 'Medium',
+        nutrition: { calories: 520, protein: '26g', fat: '22g', carbs: '55g' },
         tags: ['Festive','High‑Protein'],
         ingredients: ['1 cup red lentils','200g paneer cubes','1 onion','2 tomatoes','1 tsp garam masala','Cilantro'],
-        steps: ['Cook lentils until tender.','Sauté onion and tomatoes with spices.','Fold in paneer and lentils; simmer 5 minutes.'] },
-      { id: 'roast-beef', name: 'Herb‑Crusted Roast Beef', category: 'Beef', diet: '', time: 90, rating: 4.9, pop: 97,
-        img: 'https://images.unsplash.com/photo-1604908554049-1be34935a4fb?q=80&w=1200&auto=format&fit=crop',
-        tags: ['Holiday','Crowd‑Pleaser'],
-        ingredients: ['1.5 kg beef roast','2 tbsp Dijon','2 tbsp rosemary','3 garlic cloves','Salt & pepper'],
-        steps: ['Rub beef with mustard, herbs and garlic.','Roast at 425°F for 20 min then 350°F until desired doneness.','Rest 15 minutes before slicing.'] },
+        steps: [
+          'Rinse lentils until water runs clear; cover with water in a pot.',
+          'Simmer lentils 15–18 minutes until tender; salt lightly and set aside.',
+          'In a skillet, sauté sliced onion in oil until golden at edges.',
+          'Add chopped tomatoes; cook until they break down and thicken.',
+          'Stir in garam masala and chili; cook 30 seconds until fragrant.',
+          'Fold in paneer cubes; cook 2–3 minutes to warm through.',
+          'Combine lentils with the masala; simmer 3–4 minutes and adjust salt.',
+          'Finish with cilantro and a squeeze of lemon; serve with rice or roti.'
+        ] },
       { id: 'caviar-board', name: 'Caviar & Crème Fraîche Bites', category: 'Appetizers', diet: 'Gluten‑Free', time: 15, rating: 4.6, pop: 80,
         img: 'https://images.unsplash.com/photo-1532787799187-9361160b703b?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1532787799187-9361160b703b?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1493770348161-369560ae357d?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Elegant bites with creamy tang and briny pop, perfect for entertaining.',
+        servings: 8,
+        difficulty: 'Easy',
+        nutrition: { calories: 120, protein: '5g', fat: '7g', carbs: '9g' },
         tags: ['Entertaining'],
         ingredients: ['Blini or chips','Crème fraîche','Caviar','Chives','Lemon'],
-        steps: ['Top base with crème fraîche, caviar and chives.','Finish with lemon zest.'] },
+        steps: [
+          'Arrange blini or chips on a tray; chill crème fraîche.',
+          'Dollop crème fraîche on each base using a small spoon.',
+          'Top with caviar, letting pearls sit gently atop the cream.',
+          'Finish with snipped chives and a micro‑zest of lemon.',
+          'Serve immediately; keep tray chilled if holding longer than 5 minutes.'
+        ] },
       { id: 'noodle-nest', name: 'Crispy Parmesan Noodle Nests', category: 'Pasta', diet: '', time: 30, rating: 4.5, pop: 82,
         img: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1543352634-8732e49e4a2c?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Golden, crispy pasta nests held together with butter and parmesan.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 430, protein: '16g', fat: '18g', carbs: '52g' },
         tags: ['Weeknight','Crispy'],
         ingredients: ['200g spaghetti','1/2 cup parmesan','2 tbsp butter','Pepper'],
-        steps: ['Cook pasta to al dente.','Toss with butter & parmesan.','Twirl nests and bake until crisp.'] },
+        steps: [
+          'Boil salted water; cook spaghetti until just shy of al dente.',
+          'Drain; toss with butter, grated parmesan, and black pepper.',
+          'Twirl small bundles with a fork and spoon to form nests on a tray.',
+          'Bake at 425°F for 8–10 minutes until edges turn golden and crisp.',
+          'Cool 2 minutes to set; shower with more parmesan and serve.'
+        ] },
       { id: 'avocado-cut', name: 'How to Cut an Avocado', category: 'Salads', diet: 'Vegan', time: 5, rating: 4.4, pop: 75,
         img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Master the safe, simple steps for clean avocado halves and slices.',
+        servings: 1,
+        difficulty: 'Easy',
+        nutrition: { calories: 240, protein: '3g', fat: '22g', carbs: '12g' },
         tags: ['Skill','Basics'],
         ingredients: ['1 ripe avocado','Knife','Spoon'],
-        steps: ['Slice lengthwise around the pit.','Twist to separate halves.','Tap and rotate to remove pit.','Scoop slices.'] },
+        steps: [
+          'Stabilize the avocado on a board; slice lengthwise around the pit.',
+          'Twist to separate halves; hold the pitted half with a towel.',
+          'Tap the pit gently with the blade, then twist to remove.',
+          'Run a spoon between flesh and skin to release halves cleanly.',
+          'Slice or cube as desired; spritz with lemon to prevent browning.'
+        ] },
       { id: 'lemon-spritz', name: 'Limoncello Spritz', category: 'Desserts', diet: 'Vegetarian', time: 3, rating: 4.3, pop: 78,
         img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1544145945-f90425340c7e?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Zesty, bubbly cocktail that tastes like sunshine in a glass.',
+        servings: 1,
+        difficulty: 'Easy',
+        nutrition: { calories: 180, protein: '0g', fat: '0g', carbs: '21g' },
         tags: ['Cocktail','Light'],
         ingredients: ['2 oz limoncello','3 oz prosecco','Soda water','Ice','Lemon'],
-        steps: ['Combine over ice.','Top with soda.','Garnish with lemon.'] },
+        steps: [
+          'Fill a large wine glass with ice.',
+          'Add limoncello and prosecco; give a gentle stir.',
+          'Top with soda water to taste.',
+          'Garnish with a lemon wheel and a sprig of mint.'
+        ] },
       { id: 'pumpkin-brownies', name: 'Fudgy Pumpkin Swirl Brownies', category: 'Desserts', diet: 'Vegetarian', time: 45, rating: 4.8, pop: 92,
         img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476f?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1606313564200-e75d5e30476f?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Ultra-fudgy brownies with tangy pumpkin swirl for cozy fall vibes.',
+        servings: 12,
+        difficulty: 'Easy',
+        nutrition: { calories: 290, protein: '4g', fat: '14g', carbs: '39g' },
         tags: ['Fall','Baking'],
         ingredients: ['Brownie batter','Pumpkin purée','Cream cheese','Sugar','Spices'],
-        steps: ['Layer brownie batter in pan.','Dollop pumpkin mix and swirl.','Bake until set.'] },
+        steps: [
+          'Prepare brownie batter per recipe; pour 2/3 into a lined pan.',
+          'Whisk pumpkin purée with cream cheese, sugar, and spices.',
+          'Dollop pumpkin mix over batter; add remaining batter on top.',
+          'Use a knife to create broad swirls without overmixing.',
+          'Bake until the center is just set and edges look cracked.',
+          'Cool completely before slicing for clean layers.'
+        ] },
       { id: 'tomato-basil-soup', name: 'Tomato Basil Soup', category: 'Soups', diet: 'Vegetarian', time: 25, rating: 4.5, pop: 86,
         img: 'https://images.unsplash.com/photo-1543352634-8732e49e4a2c?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1543352634-8732e49e4a2c?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Comforting tomato soup with fragrant basil, ready in under 30 minutes.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 210, protein: '5g', fat: '9g', carbs: '29g' },
         tags: ['Comfort','Quick'],
         ingredients: ['Tomatoes','Basil','Garlic','Vegetable stock','Cream'],
-        steps: ['Simmer tomatoes with garlic and stock.','Blend smooth and finish with cream.'] },
+        steps: [
+          'Sauté sliced garlic in olive oil until just golden.',
+          'Add chopped tomatoes; cook until jammy and concentrated.',
+          'Pour in stock; simmer 10–12 minutes.',
+          'Blend until smooth; stir in a splash of cream.',
+          'Season and finish with torn basil leaves.'
+        ] },
       { id: 'bruschetta', name: 'Tomato Basil Bruschetta', category: 'Appetizers', diet: 'Vegetarian', time: 15, rating: 4.4, pop: 79,
         img: 'https://images.unsplash.com/photo-1606857521015-7f9fcf4235df?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1606857521015-7f9fcf4235df?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Crisp toasts topped with juicy tomato, fresh basil, and garlic.',
+        servings: 8,
+        difficulty: 'Easy',
+        nutrition: { calories: 150, protein: '5g', fat: '6g', carbs: '19g' },
         tags: ['Entertaining'],
         ingredients: ['Baguette','Tomatoes','Basil','Olive oil','Garlic'],
-        steps: ['Toast slices.','Top with tomato basil mixture and drizzle oil.'] },
+        steps: [
+          'Toast oiled baguette slices under the broiler until golden.',
+          'Toss chopped tomatoes with basil, garlic, salt, and olive oil.',
+          'Spoon mixture over warm toasts and serve promptly.'
+        ] },
       { id: 'pesto-pasta', name: 'Pesto Tagliatelle', category: 'Pasta', diet: 'Vegetarian', time: 20, rating: 4.6, pop: 90,
         img: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Classic basil pesto tossed with silky tagliatelle and toasted pine nuts.',
+        servings: 2,
+        difficulty: 'Easy',
+        nutrition: { calories: 520, protein: '17g', fat: '22g', carbs: '66g' },
         tags: ['Weeknight'],
         ingredients: ['Tagliatelle','Basil pesto','Parmesan','Pine nuts'],
-        steps: ['Cook pasta.','Toss with pesto and top with parmesan and nuts.'] },
+        steps: [
+          'Boil pasta in salted water until al dente; reserve 1/2 cup pasta water.',
+          'Toss hot pasta with pesto, loosening with reserved water as needed.',
+          'Top with parmesan and toasted pine nuts; serve immediately.'
+        ] },
       { id: 'garlic-shrimp', name: 'Garlic Butter Shrimp', category: 'Seafood', diet: '', time: 12, rating: 4.7, pop: 93,
         img: 'https://images.unsplash.com/photo-1523365280197-f1783db9fe62?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1523365280197-f1783db9fe62?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Juicy shrimp sautéed in garlic butter and finished with lemon.',
+        servings: 2,
+        difficulty: 'Easy',
+        nutrition: { calories: 320, protein: '28g', fat: '18g', carbs: '6g' },
         tags: ['Quick','Skillet'],
         ingredients: ['Shrimp','Butter','Garlic','Parsley','Lemon'],
-        steps: ['Sauté garlic in butter.','Cook shrimp 2–3 min each side.','Finish with lemon.'] },
+        steps: [
+          'Pat shrimp dry; season with salt and pepper.',
+          'Sauté minced garlic in butter until fragrant, 30 seconds.',
+          'Add shrimp; cook 2–3 minutes per side until just opaque.',
+          'Finish with lemon juice and chopped parsley; serve hot.'
+        ] },
       { id: 'lemon-chicken', name: 'Lemon Herb Roast Chicken', category: 'Chicken', diet: '', time: 60, rating: 4.8, pop: 95,
         img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1481931715705-36f5f79f1f4d?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Tender roast chicken infused with bright lemon and fresh herbs.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 540, protein: '42g', fat: '34g', carbs: '2g' },
         tags: ['Roast','Sunday'],
         ingredients: ['Whole chicken','Lemon','Thyme','Butter','Salt'],
-        steps: ['Rub with butter, lemon and herbs.','Roast until golden and juicy.'] },
-      { id: 'gourmet-burger', name: 'Gourmet Beef Burger', category: 'Beef', diet: '', time: 25, rating: 4.6, pop: 88,
-        img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop',
-        tags: ['Grill','Cheesy'],
-        ingredients: ['Ground beef','Buns','Cheese','Onion','Sauce'],
-        steps: ['Form patties and season.','Grill and assemble with toppings.'] },
+        steps: [
+          'Pat chicken dry; season inside and out with salt.',
+          'Rub with softened butter, lemon zest, and chopped thyme.',
+          'Roast at 425°F 20 minutes; reduce to 350°F and cook until done.',
+          'Rest 15 minutes before carving; serve with pan juices.'
+        ] },
       { id: 'quinoa-bowl', name: 'Rainbow Quinoa Bowl', category: 'Vegan', diet: 'Vegan', time: 22, rating: 4.4, pop: 81,
         img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Colorful bowl of quinoa and crunchy veggies with bright tahini dressing.',
+        servings: 2,
+        difficulty: 'Easy',
+        nutrition: { calories: 480, protein: '16g', fat: '18g', carbs: '66g' },
         tags: ['Healthy','Bowl'],
         ingredients: ['Quinoa','Veggies','Tahini','Lemon'],
-        steps: ['Cook quinoa.','Toss with veggies and dressing.'] },
+        steps: [
+          'Rinse quinoa; simmer 15 minutes until fluffy.',
+          'Chop mixed vegetables; prepare a tahini‑lemon dressing.',
+          'Toss warm quinoa with veggies and dressing; season and serve.'
+        ] },
       { id: 'berry-cheesecake', name: 'No‑Bake Berry Cheesecake', category: 'Desserts', diet: 'Vegetarian', time: 240, rating: 4.7, pop: 89,
         img: 'https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Silky cheesecake topped with glossy berries—no oven required.',
+        servings: 10,
+        difficulty: 'Easy',
+        nutrition: { calories: 420, protein: '7g', fat: '27g', carbs: '37g' },
         tags: ['Chilled','Make‑Ahead'],
         ingredients: ['Cream cheese','Berries','Graham crust','Sugar'],
-        steps: ['Whip filling and pour into crust.','Chill and top with berries.'] },
+        steps: [
+          'Beat cream cheese with sugar until smooth.',
+          'Fold in whipped cream; spread into prepared crust.',
+          'Chill at least 4 hours to set.',
+          'Top with mixed berries and serve cold.'
+        ] },
       { id: 'greek-salad', name: 'Crisp Greek Salad', category: 'Salads', diet: 'Vegetarian', time: 10, rating: 4.5, pop: 84,
         img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1543826173-74f1d992c361?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Crisp veggies, briny olives, and salty feta—simple and refreshing.',
+        servings: 3,
+        difficulty: 'Easy',
+        nutrition: { calories: 260, protein: '7g', fat: '21g', carbs: '11g' },
         tags: ['Fresh','No‑Cook'],
         ingredients: ['Tomato','Cucumber','Feta','Olives','Oregano'],
-        steps: ['Chop and toss with olive oil and oregano.'] },
+        steps: [
+          'Chop tomatoes and cucumber; slice red onion thinly.',
+          'Toss with olives, oregano, olive oil, and vinegar.',
+          'Add feta just before serving; season to taste.'
+        ] },
       { id: 'sushi-rolls', name: 'Simple Sushi Rolls', category: 'Seafood', diet: '', time: 50, rating: 4.3, pop: 76,
         img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Approachable maki rolls filled with your favorite ingredients.',
+        servings: 3,
+        difficulty: 'Medium',
+        nutrition: { calories: 430, protein: '16g', fat: '8g', carbs: '76g' },
         tags: ['Skill','Entertaining'],
         ingredients: ['Sushi rice','Nori','Fillings','Soy sauce'],
-        steps: ['Spread rice on nori.','Add fillings, roll, slice.'] },
+        steps: [
+          'Cook sushi rice; season with vinegar, sugar, and salt; cool.',
+          'Spread rice on nori; add fillings in a line.',
+          'Roll tightly with a mat; slice into bite‑size pieces.'
+        ] },
       { id: 'pancakes', name: 'Fluffy Pancakes', category: 'Desserts', diet: 'Vegetarian', time: 20, rating: 4.6, pop: 87,
         img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1497534446932-c925b458314e?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Tall, tender pancakes with classic diner flavor and texture.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 390, protein: '10g', fat: '12g', carbs: '60g' },
         tags: ['Brunch'],
         ingredients: ['Flour','Eggs','Milk','Baking powder','Sugar'],
-        steps: ['Mix batter.','Cook on griddle until golden.'] },
+        steps: [
+          'Whisk dry ingredients; add wet ingredients and mix just combined.',
+          'Rest batter 5 minutes; heat a griddle lightly oiled.',
+          'Cook until bubbles form and edges set; flip and finish.'
+        ] },
       { id: 'avocado-toast', name: 'Avocado Toast', category: 'Appetizers', diet: 'Vegan', time: 8, rating: 4.2, pop: 74,
         img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Toasted bread topped with creamy avocado, lemon, and chili flakes.',
+        servings: 1,
+        difficulty: 'Easy',
+        nutrition: { calories: 310, protein: '7g', fat: '18g', carbs: '32g' },
         tags: ['Breakfast','Simple'],
         ingredients: ['Bread','Avocado','Lemon','Chili flakes'],
-        steps: ['Toast bread.','Mash avocado with lemon and spread; season.'] },
+        steps: [
+          'Toast bread to desired doneness.',
+          'Mash avocado with lemon, salt, and pepper.',
+          'Spread on toast; finish with chili flakes and olive oil.'
+        ] },
     ];
 
     const HOLIDAY = [
@@ -550,8 +799,35 @@
       $('#modalTitle').textContent = r.name;
       $('#modalSubtitle').textContent = r.tags.join(' • ');
       $('#modalImg').src = r.img; $('#modalImg').alt = r.name;
+      // Info grid
+      $('#modalInfo').innerHTML = `
+        <div class="info-item"><b>${r.time} min</b><span>Time</span></div>
+        <div class="info-item"><b>${r.servings || 2}</b><span>Servings</span></div>
+        <div class="info-item"><b>${r.difficulty || 'Easy'}</b><span>Difficulty</span></div>
+        <div class="info-item"><b>${r.rating}</b><span>Rating</span></div>
+      `;
+      // Description
+      $('#modalDesc').textContent = r.description || '';
       $('#modalIngredients').innerHTML = r.ingredients.map(i=>`<li>${i}</li>`).join('');
       $('#modalSteps').innerHTML = r.steps.map(s=>`<li>${s}</li>`).join('');
+      // Nutrition
+      const n = r.nutrition || {};
+      $('#modalNutrition').innerHTML = Object.keys(n).length ? [
+        n.calories != null ? `<li>Calories: ${n.calories}</li>` : '',
+        n.protein ? `<li>Protein: ${n.protein}</li>` : '',
+        n.fat ? `<li>Fat: ${n.fat}</li>` : '',
+        n.carbs ? `<li>Carbs: ${n.carbs}</li>` : ''
+      ].filter(Boolean).join('') : '<li>No nutrition data.</li>';
+      // Gallery
+      const g = (r.gallery && r.gallery.length ? r.gallery : [r.img]);
+      $('#modalGallery').innerHTML = g.map((src, i)=>`<img src="${src}" alt="${r.name} photo ${i+1}" ${i===0?'class="active"':''} loading="lazy">`).join('');
+      $$('#modalGallery img').forEach((imgEl, idx) => {
+        imgEl.addEventListener('click', () => {
+          $('#modalImg').src = imgEl.src;
+          $$('#modalGallery img').forEach(m=>m.classList.remove('active'));
+          imgEl.classList.add('active');
+        });
+      });
       const m = $('#recipeModal'); m.classList.add('active'); m.removeAttribute('aria-hidden');
       $('#closeModal').focus();
     }
