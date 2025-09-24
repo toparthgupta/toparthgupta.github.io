@@ -503,14 +503,16 @@
     function recipeCard(r) {
       const fav = state.favorites.has(r.id);
       return `
-        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}"
+        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}" title="${r.name}"
                  data-track="click view" data-track-type="recipe" data-track-id="${r.id}"
-                 data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}">
+                 data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}"
+                 data-track-title="${r.name}" data-track-time="${r.time}" data-track-rating="${r.rating}" data-track-diet="${r.diet}">
           <span class="label">${r.tags[0] || 'Featured'}</span>
           <img src="${r.img}" alt="${r.name}" loading="lazy" decoding="async">
           <button class="fav ${fav ? 'active' : ''}" aria-label="Favorite ${r.name}" data-fav="${r.id}"
                   data-track="click" data-track-type="action" data-track-id="favorite" data-track-label="${r.id}"
-                  data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}">❤</button>
+                  data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}"
+                  data-track-title="${r.name}">❤</button>
           <div class="card-body">
             <div class="tag">${r.category}</div>
             <div class="title">${r.name}</div>
@@ -573,7 +575,8 @@
       const track = $('#videoTrack');
       track.innerHTML = VIDEOS.map(v=>`
         <article class="carousel-item" role="button" aria-label="Play ${v.title}" data-url="${v.url}"
-                 data-track="click view" data-track-type="video" data-track-id="${v.title}">
+                 data-track="click view" data-track-type="video" data-track-id="${v.title}"
+                 data-track-title="${v.title}">
           <img src="${v.thumb}" alt="${v.title}" loading="lazy" decoding="async">
           <div class="card-body">
             <div class="title">${v.title}</div>
