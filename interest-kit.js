@@ -17,7 +17,8 @@
     debounceMs: 400,
     attributePrefix: 'track', // dataset prefix: dataset.track*, i.e., data-track-*
     tokenStopWords: new Set(['the','and','for','with','to','of','a','in','on','by','or','at','is','it','how','make','your','you','from']),
-    autoHashTracking: true
+    autoHashTracking: true,
+    affinityHalfLifeMs: 1000 * 60 * 60 * 24 * 7 // 7 days
   };
 
   const DEFAULT_BUCKETS = {
@@ -40,6 +41,7 @@
       .split(/[^a-z0-9]+/)
       .filter(t => t && t.length > 1 && !stop.has(t));
   }
+  function round2(n){ return Math.round((Number(n)||0) * 100) / 100; }
 
   function createData(){
     return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {} };
@@ -81,6 +83,10 @@
       byBucket[key] = Object.assign({}, current, meta);
       save();
     }
+    function getMeta(bucket, key){
+      const byBucket = data.meta[bucket] || {};
+      return byBucket[key] || {};
+    }
     function getTop(bucket, n){
       const map = data.buckets[bucket] || {};
       return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0, toNumber(n, 5));
@@ -89,7 +95,7 @@
     function exportJSON(){ return JSON.parse(JSON.stringify(data)); }
     function importJSON(obj){ if (obj && obj.buckets) { data = obj; save(); } }
     function reset(){ data = createData(); save(); }
-    return { inc, getTop, set, setMeta, get, exportJSON, importJSON, reset };
+    return { inc, getTop, set, setMeta, getMeta, get, exportJSON, importJSON, reset };
   }
 
   function debounce(fn, delay){ let t; return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this, args), delay); }; }
@@ -227,6 +233,17 @@
         meta.event = eventType; meta.type = type; meta.lastSeenAt = now();
         this.record({ bucket, key, weight, meta });
 
+        // Interest score: count clicks per item
+        if (eventType === 'click') {
+          const prev = this._storage.getMeta(bucket, key) || {};
+          const clicks = (prev.clicks || 0) + 1;
+          this._storage.setMeta(bucket, key, { clicks, lastClickAt: now() });
+          this._updateGlobalDataExposure();
+        }
+
+        // Affinity score: exponential time-decayed weight accumulation
+        this._updateAffinity(bucket, key, weight);
+
         // Optional linked fields
         if (ds.trackCategory) this.record({ bucket: DEFAULT_BUCKETS.category, key: ds.trackCategory, weight: 1, meta: { via: type } });
         if (ds.trackTags) splitList(ds.trackTags).forEach(t => this.record({ bucket: DEFAULT_BUCKETS.tag, key: t, weight: 1, meta: { via: type } }));
@@ -264,7 +281,30 @@
     export(){ return this._storage ? this._storage.exportJSON() : createData(); },
     import(obj){ if (!this._storage) this.init(); this._storage.importJSON(obj); this._updateGlobalDataExposure(); },
     reset(){ if (!this._storage) this.init(); this._storage.reset(); this._updateGlobalDataExposure(); },
-    data(){ return this._storage ? this._storage.get() : createData(); }
+    data(){ return this._storage ? this._storage.get() : createData(); },
+    getClickCount(bucket, key){ if (!this._storage) this.init(); const m=this._storage.getMeta(bucket,key)||{}; return m.clicks||0; },
+    getTopByClicks(bucket, n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const byBucket=(data.meta[bucket]||{}); return Object.entries(byBucket).map(([k,v])=>[k, v.clicks||0]).sort((a,b)=>b[1]-a[1]).slice(0,n); },
+    // Affinity helpers
+    _decayValue(current, lastTs, nowTs){
+      const halfLife = this._config.affinityHalfLifeMs;
+      if (!current || !lastTs) return current || 0;
+      const lambda = Math.LN2 / halfLife; // per ms
+      const dt = Math.max(0, nowTs - lastTs);
+      return current * Math.exp(-lambda * dt);
+    },
+    _updateAffinity(bucket, key, delta){
+      if (!this._storage) this.init();
+      const t = now();
+      const meta = this._storage.getMeta(bucket, key) || {};
+      const prevAffinity = meta.affinity || 0;
+      const decayed = this._decayValue(prevAffinity, meta.affinityUpdatedAt || meta.lastSeenAt || t, t);
+      const affinity = round2(decayed + (Number(delta) || 0));
+      this._storage.setMeta(bucket, key, { affinity, affinityUpdatedAt: t });
+      this._updateGlobalDataExposure();
+      return affinity;
+    },
+    getAffinity(bucket, key){ if (!this._storage) this.init(); const m=this._storage.getMeta(bucket,key)||{}; return round2(this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||now(), now())); },
+    getTopByAffinity(bucket, n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const byBucket=(data.meta[bucket]||{}); const t=now(); const entries=Object.entries(byBucket).map(([k,m])=>{ const v=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); return [k, round2(v)]; }); return entries.sort((a,b)=>b[1]-a[1]).slice(0,n); }
   };
 
   // Attach globally
