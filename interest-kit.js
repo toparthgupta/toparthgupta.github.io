@@ -120,6 +120,8 @@
   const InterestKit = {
     _config: Object.assign({}, DEFAULT_CONFIG),
     _storage: null,
+    _engagementRetryCount: 0,
+    _maxEngagementRetries: 10,
     _updateGlobalDataExposure(){
       try {
         const data = this._storage ? this._storage.get() : null;
@@ -129,18 +131,26 @@
         } else {
           try { delete global.INTEREST_KIT_DATA; } catch(e) { global.INTEREST_KIT_DATA = undefined; }
         }
-        try {
-          if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
-            global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
-          }
-        } catch(_) {}
+        this._trySetEngagement();
       } catch(e){}
+    },
+    _trySetEngagement(){
+      try {
+        if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
+          global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
+          this._engagementRetryCount = 0; // reset on success
+        } else if (this._engagementRetryCount < this._maxEngagementRetries) {
+          // Retry after a delay
+          this._engagementRetryCount++;
+          setTimeout(() => this._trySetEngagement(), 500);
+        }
+      } catch(_) {}
     },
     init(userConfig){
       if (this._storage) return this; // already initialized
       this._config = Object.assign({}, DEFAULT_CONFIG, userConfig || {});
       this._storage = InterestStorage(this._config.storageKey);
-      // Do not expose data globally until first recorded interaction
+      // Expose data globally and call agentforce_messaging on init
       this._updateGlobalDataExposure();
       // Observers
       if (this._config.observeViews && 'IntersectionObserver' in global) {
