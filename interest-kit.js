@@ -122,6 +122,7 @@
     _storage: null,
     _engagementRetryCount: 0,
     _maxEngagementRetries: 10,
+    _salesforceInitialized: false,
     _updateGlobalDataExposure(){
       try {
         const data = this._storage ? this._storage.get() : null;
@@ -139,10 +140,81 @@
         if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
           global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
           this._engagementRetryCount = 0; // reset on success
+          this._sendSalesforceInteractions();
         } else if (this._engagementRetryCount < this._maxEngagementRetries) {
           // Retry after a delay
           this._engagementRetryCount++;
           setTimeout(() => this._trySetEngagement(), 500);
+        }
+      } catch(_) {}
+    },
+    _loadSalesforceScript(){
+      if (global.document && !global.document.querySelector('script[src*="c360a.min.js"]')) {
+        const script = global.document.createElement('script');
+        script.src = 'https://cdn.pc-rnd.c360a.salesforce.com/beacon/c360a/7d4734d9-cd0b-406a-8850-94bea94a960b/scripts/c360a.min.js';
+        script.onload = () => {
+          setTimeout(() => {
+            this._initSalesforceInteractions();
+          }, 100);
+        };
+        global.document.head.appendChild(script);
+      } else if (global.SalesforceInteractions) {
+        this._initSalesforceInteractions();
+      }
+    },
+    _initSalesforceInteractions(){
+      try {
+        if (global.SalesforceInteractions && !this._salesforceInitialized) {
+          global.SalesforceInteractions.init({
+            consents: [{
+              provider: 'OneTrust',
+              purpose: 'Tracking',
+              status: global.SalesforceInteractions.ConsentStatus.OptIn
+            }]
+          }).then(() => {
+            console.log('SalesforceInteractions init successful');
+            this._salesforceInitialized = true;
+          }).catch((err) => {
+            console.warn('SalesforceInteractions init failed:', err);
+          });
+        }
+      } catch(_) {}
+    },
+    _sendSalesforceInteractions(){
+      try {
+        if (!this._salesforceInitialized) {
+          this._loadSalesforceScript();
+          return;
+        }
+        
+        if (global.SalesforceInteractions && typeof global.SalesforceInteractions.sendEvent === 'function') {
+          global.SalesforceInteractions.setLoggingLevel(5);
+          
+          // Get top affinity items to send as events
+          const topItems = this.getTopByAffinity('items', 5);
+          
+          topItems.forEach(([itemId, affinity]) => {
+            if (affinity > 0) {
+              const meta = this._storage.getMeta('items', itemId) || {};
+              const title = meta.title || itemId;
+              const tags = [meta.genre, meta.category, meta.type].filter(Boolean).join(', ') || 'engagement';
+              
+              global.SalesforceInteractions.sendEvent({
+                interaction: {
+                  name: "item",
+                  eventType: "item", 
+                  title: title,
+                  tags: tags,
+                  affinity: affinity
+                },
+                user: {
+                    identities: {
+                      deviceId: "DEVICE-12345"
+                    }
+                }
+              });
+            }
+          });
         }
       } catch(_) {}
     },
