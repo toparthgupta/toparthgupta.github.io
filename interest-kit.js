@@ -135,16 +135,18 @@
         this._trySetEngagement();
       } catch(e){}
     },
-    _trySetEngagement(){
+    _trySetEngagement(sendSalesforceEvents = false){
       try {
         if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
           global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
           this._engagementRetryCount = 0; // reset on success
-          this._sendSalesforceInteractions();
+          if (sendSalesforceEvents) {
+            this._sendSalesforceInteractions();
+          }
         } else if (this._engagementRetryCount < this._maxEngagementRetries) {
           // Retry after a delay
           this._engagementRetryCount++;
-          setTimeout(() => this._trySetEngagement(), 500);
+          setTimeout(() => this._trySetEngagement(sendSalesforceEvents), 500);
         }
       } catch(_) {}
     },
@@ -181,7 +183,7 @@
         }
       } catch(_) {}
     },
-    _sendSalesforceInteractions(){
+    _sendNewEngagementEvent(bucket, key, weight, meta){
       try {
         if (!this._salesforceInitialized) {
           this._loadSalesforceScript();
@@ -191,30 +193,23 @@
         if (global.SalesforceInteractions && typeof global.SalesforceInteractions.sendEvent === 'function') {
           global.SalesforceInteractions.setLoggingLevel(5);
           
-          // Get top affinity items to send as events
-          const topItems = this.getTopByAffinity('items', 5);
+          const affinity = this.getAffinity(bucket, key);
+          const title = meta.title || key;
+          const tags = [meta.genre, meta.category, meta.type].filter(Boolean).join(', ') || 'engagement';
           
-          topItems.forEach(([itemId, affinity]) => {
-            if (affinity > 0) {
-              const meta = this._storage.getMeta('items', itemId) || {};
-              const title = meta.title || itemId;
-              const tags = [meta.genre, meta.category, meta.type].filter(Boolean).join(', ') || 'engagement';
-              
-              global.SalesforceInteractions.sendEvent({
-                interaction: {
-                  name: "item",
-                  eventType: "item", 
-                  title: title,
-                  tags: tags,
-                  affinity: affinity
-                },
-                user: {
-                    identities: {
-                      deviceId: "DEVICE-12345"
-                    }
+          global.SalesforceInteractions.sendEvent({
+            interaction: {
+              name: "item",
+              eventType: "item", 
+              title: title,
+              tags: tags,
+              affinity: affinity
+            },
+            user: {
+                identities: {
+                  deviceId: "DEVICE-12345"
                 }
-              });
-            }
+             }
           });
         }
       } catch(_) {}
@@ -349,6 +344,9 @@
           const clicks = (prev.clicks || 0) + 1;
           this._storage.setMeta(bucket, key, { clicks, lastClickAt: now() });
           this._updateGlobalDataExposure();
+          
+          // Send new click events to Salesforce
+          this._sendNewEngagementEvent(bucket, key, weight, meta);
         }
 
         // Affinity score: exponential time-decayed weight accumulation
