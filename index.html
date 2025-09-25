@@ -1002,20 +1002,25 @@
       img.src = src;
     })();
   </script>
-  <script src="https://cdn.pc-rnd.c360a.salesforce.com/beacon/c360a/7d4734d9-cd0b-406a-8850-94bea94a960b/scripts/c360a.min.js"></script>
-  <script>
-  setTimeout(() => {
-    SalesforceInteractions.init({
-  consents: [{
-    provider: 'OneTrust',
-    purpose: 'Tracking',
-    status: SalesforceInteractions.ConsentStatus.OptIn
-  }]
-}).then(()=>{
-  console.log('init successful');
-});
-  }, 3000);
-  </script>
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			agentforce_messaging.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+			agentforce_messaging.settings.devMode = true;
+			agentforce_messaging.init(
+				'00DSB00000a7RbR',
+				'CWCMessaging',
+				'https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937',
+				{
+					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js'' onload='initEmbeddedMessaging()'></script>
 </body>
 </html>
 
