@@ -46,7 +46,7 @@
   function round2(n){ return Math.round((Number(n)||0) * 100) / 100; }
 
   function createData(){
-    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {}, siteTitle: document.title || 'Unknown Site' };
+    return { version: DEFAULT_CONFIG.version, updatedAt: now(), buckets: {}, meta: {}, siteTitle: document.title || 'Unknown Site', sessionId: null };
   }
 
   function InterestStorage(storageKey){
@@ -174,6 +174,7 @@
           }).then(() => {
             console.log('SalesforceInteractions init successful');
             this._salesforceInitialized = true;
+            this._updateSessionId();
           }).catch((err) => {
             console.warn('SalesforceInteractions init failed:', err);
           });
@@ -215,6 +216,20 @@
               });
             }
           });
+        }
+      } catch(_) {}
+    },
+    _updateSessionId(){
+      try {
+        if (global.SalesforceInteractions && typeof global.SalesforceInteractions.getAnonymousId === 'function') {
+          const sessionId = global.SalesforceInteractions.getAnonymousId();
+          if (sessionId && this._storage) {
+            const data = this._storage.get();
+            data.sessionId = sessionId;
+            this._storage.get = () => data; // Update the stored data
+            this._updateGlobalDataExposure();
+            console.log('SessionId updated:', sessionId);
+          }
         }
       } catch(_) {}
     },
