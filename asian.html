@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Culina Asian — Flavors of Asia</title>
+  <meta name="description" content="Explore the diverse culinary traditions of Asia from Japanese sushi to Thai curries, Chinese stir-fries, and Korean BBQ.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #fdfcfb;
+      --elevated: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --brand: #dc2626; /* Asian red */
+      --brand-600: #b91c1c;
+      --accent: #059669; /* Asian green */
+      --brand-2: #fbbf24; /* Golden yellow */
+      --success: #10b981;
+      --danger: #ef4444;
+      --ring: rgba(220, 38, 38, .30);
+      --shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+      --shadow-md: 0 10px 30px rgba(16,24,40,.08);
+      --shadow-lg: 0 30px 70px rgba(16,24,40,.10);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --space: clamp(14px, 1.2vw, 18px);
+      --max: 1200px;
+      --hero-img: url('https://images.unsplash.com/photo-1617093727343-374698b1b08d?q=80&w=1600&auto=format&fit=crop');
+    }
+
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1100px 480px at 85% -220px, rgba(220,38,38,.08), transparent 60%),
+                  radial-gradient(900px 380px at 10% -120px, rgba(251,191,36,.10), transparent 60%),
+                  var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 calc(var(--space) * 1.1); }
+
+    /* Skip link */
+    .skip-link { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 12px; top: 12px; width: auto; height: auto; background: var(--elevated); padding: 10px 14px; border-radius: 8px; box-shadow: var(--shadow-md); z-index: 1000; }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(160%) blur(10px); background: color-mix(in oklab, var(--bg) 94%, transparent); border-bottom: 1px solid rgba(100,116,139,.10); }
+    .topbar { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 14px; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .5px; }
+    .brand .logo { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); }
+    .brand span { font-family: "Playfair Display", Georgia, serif; font-size: 22px; }
+
+    .search { position: relative; }
+    .search input { width: 100%; border: 1px solid rgba(100,116,139,.18); background: var(--elevated); color: var(--text); border-radius: 12px; padding: 12px 40px; outline: none; box-shadow: var(--shadow-sm); }
+    .search input:focus { border-color: var(--brand); box-shadow: 0 0 0 6px var(--ring); }
+    .search .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .actions { display: flex; align-items: center; gap: 10px; }
+    .btn { border: 1px solid rgba(100,116,139,.18); background: var(--elevated); padding: 10px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform .08s ease, box-shadow .2s ease; }
+    .btn:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: white; border: none; box-shadow: 0 8px 20px rgba(220,38,38,.25); }
+
+    /* Nav */
+    .main-nav { border-top: 1px solid rgba(100,116,139,.10); }
+    .main-nav .nav-inner { display: flex; gap: 18px; overflow:auto; padding: 10px 0; scrollbar-width: none; }
+    .chip { white-space: nowrap; border: 1px solid rgba(100,116,139,.16); padding: 8px 12px; border-radius: 999px; color: var(--muted); background: var(--elevated); cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease; }
+    .chip:hover { box-shadow: 0 6px 16px rgba(220,38,38,.12); transform: translateY(-1px); }
+    .chip[aria-current="page"], .chip.active { background: linear-gradient(135deg, rgba(220,38,38,.12), rgba(251,191,36,.12)); color: var(--brand-600); border-color: rgba(220,38,38,.25); font-weight: 600; }
+
+    /* Hero */
+    .hero { position: relative; isolation: isolate; }
+    .hero-inner { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: center; padding: clamp(28px, 5vw, 64px) 0; }
+    .headline { font-family: "Playfair Display", Georgia, serif; font-weight: 700; letter-spacing: .3px; font-size: clamp(34px, 6vw, 60px); line-height: 1.04; margin: 0 0 12px; }
+    .subhead { color: var(--muted); font-size: clamp(16px, 1.8vw, 18px); max-width: 58ch; }
+    .hero-cta { display: flex; gap: 12px; margin-top: 18px; }
+    .hero-illustration { position: relative; border-radius: var(--radius-lg); height: clamp(260px, 36vw, 460px); box-shadow: var(--shadow-lg); overflow: hidden; background:
+      linear-gradient( to bottom right, rgba(220,38,38,.25), rgba(251,191,36,.25) ),
+      var(--hero-img) center/cover no-repeat; }
+    .hero-illustration::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.0), rgba(255,255,255,.08) 60%, rgba(255,255,255,.25)); }
+    .statbar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .stat { background: var(--elevated); border: 1px solid rgba(100,116,139,.12); padding: 14px; border-radius: 14px; text-align: center; box-shadow: var(--shadow-sm); }
+    .stat b { display: block; font-size: 18px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+
+    /* Filters */
+    .filters { margin-top: 10px; display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; }
+    .filters .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .select { border: 1px solid rgba(100,116,139,.18); padding: 10px 12px; border-radius: 10px; background: var(--elevated); color: var(--muted); }
+
+    /* Recipe Grid */
+    .section { padding: clamp(24px, 4vw, 48px) 0; }
+    .section h2 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(26px, 4.2vw, 40px); margin: 0 0 18px; letter-spacing: .2px; background: linear-gradient(90deg, rgba(220,38,38,.12), rgba(251,191,36,.12)); -webkit-background-clip: text; background-clip: text; color: var(--text); }
+    .recipes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    @media (max-width: 1000px) { .recipes-grid { grid-template-columns: repeat(2, 1fr); } .hero-inner { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .recipes-grid { grid-template-columns: 1fr; } .filters { grid-template-columns: 1fr; } .topbar { grid-template-columns: 1fr; grid-auto-rows: auto; } }
+
+    .card { position: relative; background: var(--elevated); border: 1px solid rgba(100,116,139,.12); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; cursor: pointer; }
+    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .card img { aspect-ratio: 16/11; object-fit: cover; width: 100%; }
+    .card-body { padding: 12px 14px 14px; }
+    .meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
+    .title { font-weight: 700; margin: 6px 0 8px; line-height: 1.3; }
+    .tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(220,38,38,.12); color: var(--brand-600); border: 1px solid rgba(220,38,38,.25); }
+    .label { position: absolute; top: 10px; left: 10px; z-index: 2; padding: 6px 10px; border-radius: 999px; background: linear-gradient(135deg, rgba(220,38,38,.95), rgba(251,191,36,.95)); color: #fff; font-size: 12px; box-shadow: 0 6px 16px rgba(16,24,40,.16); }
+    .fav { position: absolute; right: 10px; top: 10px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 999px; background: rgba(0,0,0,.45); color: white; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.2); }
+    .fav.active { background: rgba(239,68,68,.92); }
+
+    /* Modal extras */
+    .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 6px; }
+    .info-item { border: 1px solid rgba(100,116,139,.14); background: var(--elevated); border-radius: 10px; padding: 8px 10px; text-align: center; box-shadow: var(--shadow-sm); }
+    .info-item b { display: block; font-size: 14px; }
+    .info-item span { display: block; color: var(--muted); font-size: 12px; }
+    .gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .gallery img { width: 78px; height: 78px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(100,116,139,.18); cursor: pointer; opacity: .9; transition: transform .1s ease, opacity .15s ease; }
+    .gallery img:hover { transform: translateY(-1px); opacity: 1; box-shadow: var(--shadow-sm); }
+    .gallery img.active { outline: 2px solid var(--brand); opacity: 1; }
+    .nutrition { margin: 0; padding-left: 18px; line-height: 1.7; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 100; }
+    .modal.active { display: flex; }
+    .modal::before { content: ""; position: absolute; inset: 0; background: rgba(3,7,18,.7); backdrop-filter: blur(6px); }
+    .dialog { position: relative; width: min(900px, 92vw); max-height: 86vh; overflow: auto; background: var(--elevated); border: 1px solid rgba(100,116,139,.2); border-radius: 16px; box-shadow: var(--shadow-lg); }
+    .dialog header { position: sticky; top: 0; background: inherit; border-bottom: 1px solid rgba(100,116,139,.14); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .dialog .body { padding: 16px 18px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 800px) { .dialog .body { grid-template-columns: 1fr; } }
+    .dialog h3 { margin: 0; font-size: 22px; }
+    .dialog .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+    .dialog ul { margin: 0; padding-left: 18px; line-height: 1.7; }
+    .close { border: 1px solid rgba(100,116,139,.18); background: var(--elevated); border-radius: 10px; width: 36px; height: 36px; display: grid; place-items: center; }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(100,116,139,.12); background: var(--surface); margin-top: 28px; }
+    .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; padding: 28px 0; }
+    @media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-col h4 { margin: 0 0 10px; font-size: 16px; }
+    .footer-col a { color: var(--muted); display: block; padding: 6px 0; }
+    .newsletter { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .newsletter input { border: 1px solid rgba(100,116,139,.18); padding: 10px 12px; border-radius: 10px; background: var(--elevated); }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header" role="banner">
+    <div class="container topbar">
+      <a class="brand" href="../index.html" aria-label="Culina home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Culina Asian</span>
+      </a>
+      <label class="search" for="searchInput">
+        <svg class="icon" width="18" height="18" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
+        <input id="searchInput" type="search" placeholder="Search Asian recipes…" autocomplete="off" aria-label="Search recipes" data-track="input" data-track-type="search">
+      </label>
+      <div class="actions">
+        <button class="btn" id="favoritesBtn" aria-label="View favorites" data-track="click" data-track-type="action" data-track-id="viewFavorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.4-8.3C1 9.6 2.6 6.8 5.4 6.2c1.9-.4 3.8.3 4.9 1.8 1.1-1.6 3-2.3 4.9-1.8 2.7.6 4.4 3.4 2.8 6.5C19.5 16.3 12 21 12 21z"/></svg><span id="favCount" aria-live="polite">0</span></button>
+        <button class="btn primary" id="subscribeBtn" data-track="click" data-track-type="action" data-track-id="subscribeClick">Subscribe</button>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Primary">
+      <div class="container nav-inner">
+        <a class="chip" href="#chinese" data-track="click" data-track-type="section">Chinese</a>
+        <a class="chip" href="#japanese" data-track="click" data-track-type="section">Japanese</a>
+        <a class="chip" href="#thai" data-track="click" data-track-type="section">Thai</a>
+        <a class="chip" href="#korean" data-track="click" data-track-type="section">Korean</a>
+        <a class="chip" href="#indian" data-track="click" data-track-type="section">Indian</a>
+        <a class="chip" href="#vietnamese" data-track="click" data-track-type="section">Vietnamese</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="container hero" aria-labelledby="heroTitle">
+      <div class="hero-inner">
+        <div>
+          <h1 id="heroTitle" class="headline">Flavors of Asia</h1>
+          <p class="subhead">Journey through Asia's diverse culinary landscape—from aromatic curries and fresh sushi to sizzling stir-fries and comforting noodle soups.</p>
+          <div class="hero-cta">
+            <a href="#recipes" class="btn primary" data-track="click" data-track-type="section">Explore Recipes</a>
+            <button class="btn" id="randomBtn" data-track="click" data-track-type="action" data-track-id="randomHungry">Surprise Me!</button>
+          </div>
+          <div class="statbar">
+            <div class="stat"><b id="statRecipes">0</b><span>Recipes</span></div>
+            <div class="stat"><b>12</b><span>Countries</span></div>
+            <div class="stat"><b>95k+</b><span>Food Lovers</span></div>
+          </div>
+        </div>
+        <div class="hero-illustration" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section id="recipes" class="container section" aria-labelledby="recipesTitle">
+      <h2 id="recipesTitle">Asian Favorites</h2>
+      <div class="filters" role="region" aria-label="Recipe filters">
+        <div class="chips" id="categoryChips"></div>
+        <select id="dietSelect" class="select" aria-label="Diet" data-track="change" data-track-type="diet">
+          <option value="">All Types</option>
+          <option>Vegetarian</option>
+          <option>Vegan</option>
+          <option>Gluten‑Free</option>
+        </select>
+        <select id="sortSelect" class="select" aria-label="Sort" data-track="change" data-track-type="action" data-track-id="sort">
+          <option value="pop">Most Popular</option>
+          <option value="new">Newest</option>
+          <option value="time">Quickest</option>
+        </select>
+      </div>
+
+      <div class="recipes-grid" id="grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Welcome!</h4>
+        <div class="newsletter">
+          <input id="email" type="email" placeholder="Enter your email" aria-label="Email address" data-track="input" data-track-type="action" data-track-id="emailInput">
+          <button class="btn primary" id="joinBtn" data-track="click" data-track-type="action" data-track-id="newsletterJoin">Join</button>
+        </div>
+        <p class="subhead" style="margin-top:8px;font-size:13px">Discover the tastes of Asia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Cuisines</h4>
+        <a href="#">Chinese</a>
+        <a href="#">Japanese</a>
+        <a href="#">Thai</a>
+        <a href="#">Korean</a>
+      </div>
+      <div class="footer-col">
+        <h4>Techniques</h4>
+        <a href="#">Stir-Fry</a>
+        <a href="#">Steaming</a>
+        <a href="#">Grilling</a>
+        <a href="#">Fermenting</a>
+      </div>
+      <div class="footer-col">
+        <h4>Ingredients</h4>
+        <a href="#">Soy Sauce</a>
+        <a href="#">Miso</a>
+        <a href="#">Coconut Milk</a>
+        <a href="#">Fish Sauce</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Recipe Modal -->
+  <div class="modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="dialog">
+      <header>
+        <div>
+          <h3 id="modalTitle">Recipe</h3>
+          <div class="subtitle" id="modalSubtitle"></div>
+        </div>
+        <button class="close" id="closeModal" aria-label="Close">✕</button>
+      </header>
+      <div class="body">
+        <div>
+          <img id="modalImg" alt="">
+          <div class="info-grid" id="modalInfo"></div>
+          <p id="modalDesc" class="subhead" style="margin-top:6px"></p>
+          <div class="gallery" id="modalGallery"></div>
+        </div>
+        <div>
+          <h4>Ingredients</h4>
+          <ul id="modalIngredients"></ul>
+          <h4>Instructions</h4>
+          <ol id="modalSteps"></ol>
+          <h4>Nutrition</h4>
+          <ul id="modalNutrition" class="nutrition"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic interest tracking framework -->
+  <script src="./interest-kit.js"></script>
+
+  <script>
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const state = {
+      favorites: new Set(JSON.parse(localStorage.getItem('culina:asian:favs') || '[]')),
+      query: '',
+      category: 'All',
+      diet: '',
+      sort: 'pop'
+    };
+
+    function debounce(fn, delay){ let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), delay); }; }
+
+    const CATEGORIES = ['All','Chinese','Japanese','Thai','Korean','Indian','Vietnamese'];
+    const RECIPES = [
+      { id: 'pad-thai', name: 'Pad Thai', category: 'Thai', diet: '', time: 25, rating: 4.8, pop: 98,
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Phat_Thai_kung_Chang_Khien_street_stall.jpg/500px-Phat_Thai_kung_Chang_Khien_street_stall.jpg',
+        gallery: [
+          'https://images.unsplash.com/photo-1559314809-0f31657def5e?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1617093727343-374698b1b08d?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Thailand\'s national dish with rice noodles, shrimp, bean sprouts, and tangy tamarind sauce.',
+        servings: 4,
+        difficulty: 'Medium',
+        nutrition: { calories: 520, protein: '22g', fat: '18g', carbs: '68g' },
+        tags: ['Stir-Fry','Sweet & Sour','National Dish'],
+        ingredients: ['200g rice noodles','200g shrimp','2 eggs','Bean sprouts','Fish sauce','Tamarind paste','Palm sugar','Peanuts','Lime','Chili flakes'],
+        steps: [
+          'Soak rice noodles in warm water until soft, then drain.',
+          'Heat oil in wok; scramble eggs and set aside.',
+          'Stir-fry shrimp until pink; add drained noodles.',
+          'Mix fish sauce, tamarind, and palm sugar; add to wok.',
+          'Toss with bean sprouts, eggs, and peanuts.',
+          'Serve with lime wedges and chili flakes on the side.'
+        ] },
+      { id: 'sushi-roll', name: 'Sushi', category: 'Japanese', diet: '', time: 45, rating: 4.6, pop: 92,
+        img: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Inside-out sushi roll with crab, avocado, and cucumber.',
+        servings: 3,
+        difficulty: 'Hard',
+        nutrition: { calories: 380, protein: '16g', fat: '12g', carbs: '58g' },
+        tags: ['Sushi','Inside-Out','California'],
+        ingredients: ['Sushi rice','Nori sheets','Imitation crab','Avocado','Cucumber','Sesame seeds','Soy sauce','Wasabi','Pickled ginger'],
+        steps: [
+          'Prepare sushi rice with rice vinegar, sugar, and salt.',
+          'Place nori on bamboo mat; spread rice leaving border.',
+          'Flip so nori is on top; add crab, avocado, and cucumber.',
+          'Roll tightly using mat; sprinkle with sesame seeds.',
+          'Slice with sharp wet knife into 8 pieces.',
+          'Serve with soy sauce, wasabi, and pickled ginger.'
+        ] },
+      { id: 'kung-pao-chicken', name: 'Kung Pao Chicken', category: 'Chinese', diet: '', time: 20, rating: 4.7, pop: 89,
+        img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Spicy Sichuan stir-fry with chicken, peanuts, and dried chilies.',
+        servings: 4,
+        difficulty: 'Easy',
+        nutrition: { calories: 420, protein: '32g', fat: '24g', carbs: '18g' },
+        tags: ['Sichuan','Spicy','Quick'],
+        ingredients: ['Chicken thighs','Roasted peanuts','Dried chilies','Garlic','Ginger','Soy sauce','Shaoxing wine','Cornstarch','Sichuan peppercorns'],
+        steps: [
+          'Marinate diced chicken in soy sauce and cornstarch.',
+          'Heat oil in wok; stir-fry chicken until golden.',
+          'Add garlic, ginger, and dried chilies; stir briefly.',
+          'Add sauce mixture and toss until thickened.',
+          'Stir in peanuts and Sichuan peppercorns.',
+          'Serve immediately over steamed rice.'
+        ] },
+      { id: 'bibimbap', name: 'Bibimbap', category: 'Korean', diet: 'Vegetarian', time: 45, rating: 4.5, pop: 85,
+        img: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Korean mixed rice bowl with vegetables, egg, and gochujang.',
+        servings: 2,
+        difficulty: 'Medium',
+        nutrition: { calories: 480, protein: '18g', fat: '16g', carbs: '68g' },
+        tags: ['Bowl','Colorful','Healthy'],
+        ingredients: ['Short-grain rice','Spinach','Carrots','Bean sprouts','Mushrooms','Eggs','Gochujang','Sesame oil','Garlic','Soy sauce'],
+        steps: [
+          'Cook rice; keep warm in bowls.',
+          'Blanch spinach; season with sesame oil and garlic.',
+          'Sauté julienned carrots and mushrooms separately.',
+          'Blanch bean sprouts; season lightly.',
+          'Fry eggs sunny-side up.',
+          'Arrange vegetables over rice; top with egg and serve with gochujang.'
+        ] },
+      { id: 'butter-chicken', name: 'Butter Chicken', category: 'Indian', diet: '', time: 60, rating: 4.9, pop: 96,
+        img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Creamy tomato curry with tender chicken in aromatic spices.',
+        servings: 4,
+        difficulty: 'Medium',
+        nutrition: { calories: 580, protein: '42g', fat: '28g', carbs: '32g' },
+        tags: ['Curry','Creamy','Popular'],
+        ingredients: ['Chicken breast','Tomatoes','Heavy cream','Butter','Onion','Ginger','Garlic','Garam masala','Fenugreek leaves','Basmati rice'],
+        steps: [
+          'Marinate chicken in yogurt and spices for 30 minutes.',
+          'Sauté onion, ginger, and garlic until golden.',
+          'Add tomatoes and cook until breaking down.',
+          'Add marinated chicken; cook through.',
+          'Stir in cream and butter; simmer 10 minutes.',
+          'Garnish with fenugreek leaves; serve with rice.'
+        ] },
+      { id: 'pho', name: 'Pho Bo', category: 'Vietnamese', diet: '', time: 180, rating: 4.8, pop: 88,
+        img: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=1200&auto=format&fit=crop',
+        gallery: [
+          'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=1200&auto=format&fit=crop'
+        ],
+        description: 'Aromatic Vietnamese noodle soup with beef and herbs.',
+        servings: 6,
+        difficulty: 'Hard',
+        nutrition: { calories: 420, protein: '28g', fat: '8g', carbs: '58g' },
+        tags: ['Soup','Aromatic','Comfort'],
+        ingredients: ['Beef bones','Rice noodles','Beef sirloin','Star anise','Cinnamon','Ginger','Onion','Fish sauce','Bean sprouts','Thai basil','Lime'],
+        steps: [
+          'Simmer beef bones with charred onion and ginger for 2 hours.',
+          'Add star anise, cinnamon, and fish sauce; simmer 1 more hour.',
+          'Strain broth; keep hot.',
+          'Soak rice noodles until soft; divide among bowls.',
+          'Top with thin beef slices; ladle hot broth over.',
+          'Serve with herbs, bean sprouts, and lime wedges.'
+        ] }
+    ];
+
+    function saveFavs() {
+      localStorage.setItem('culina:asian:favs', JSON.stringify([...state.favorites]));
+      $('#favCount').textContent = state.favorites.size;
+    }
+
+    function starRating(r) {
+      const full = Math.floor(r), half = r - full >= 0.5;
+      return '<span aria-label="Rating ' + r + ' out of 5">' +
+        '★★★★★'.slice(0, full) + (half ? '½' : '') + '</span>';
+    }
+
+    function renderCategoryChips() {
+      const box = $('#categoryChips');
+      box.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const a = document.createElement('button');
+        a.className = 'chip' + (state.category === cat ? ' active' : '');
+        a.type = 'button'; a.textContent = cat; a.setAttribute('aria-pressed', state.category === cat);
+        a.dataset.track = 'click'; a.dataset.trackType = 'category'; a.dataset.trackId = cat;
+        a.addEventListener('click', () => { state.category = cat; renderGrid(); });
+        box.appendChild(a);
+      });
+    }
+
+    function filterSort(list) {
+      const q = state.query.toLowerCase();
+      let out = list.filter(r =>
+        (!q || r.name.toLowerCase().includes(q) || r.tags.some(t => t.toLowerCase().includes(q))) &&
+        (state.category === 'All' || r.category === state.category) &&
+        (!state.diet || r.diet === state.diet)
+      );
+      if (state.sort === 'new') out = out.slice().reverse();
+      if (state.sort === 'time') out = out.slice().sort((a,b)=>a.time-b.time);
+      if (state.sort === 'pop') out = out.slice().sort((a,b)=>b.pop-a.pop);
+      return out;
+    }
+
+    function recipeCard(r) {
+      const fav = state.favorites.has(r.id);
+      return `
+        <article class="card" data-id="${r.id}" role="button" aria-label="Open ${r.name}" title="${r.name}"
+                 data-track="click view" data-track-type="recipe" data-track-id="${r.id}"
+                 data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}"
+                 data-track-title="${r.name}" data-track-time="${r.time}" data-track-rating="${r.rating}" data-track-diet="${r.diet}">
+          <span class="label">${r.tags[0] || 'Featured'}</span>
+          <img src="${r.img}" alt="${r.name}" loading="lazy" decoding="async">
+          <button class="fav ${fav ? 'active' : ''}" aria-label="Favorite ${r.name}" data-fav="${r.id}"
+                  data-track="click" data-track-type="action" data-track-id="favorite" data-track-label="${r.id}"
+                  data-track-category="${r.category}" data-track-tags="${r.tags.join(',')}"
+                  data-track-title="${r.name}">❤</button>
+          <div class="card-body">
+            <div class="tag">${r.category}</div>
+            <div class="title">${r.name}</div>
+            <div class="meta">
+              <span>⏱ ${r.time} min</span>
+              <span>•</span>
+              <span>${starRating(r.rating)}</span>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderGrid() {
+      const list = filterSort(RECIPES);
+      $('#grid').innerHTML = list.map(recipeCard).join('');
+      $('#statRecipes').textContent = RECIPES.length;
+
+      // Wire favorites and modal
+      $$('#grid .fav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.fav;
+          if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
+          btn.classList.toggle('active');
+          saveFavs();
+        });
+      });
+      $$('#grid .card').forEach(card => card.addEventListener('click', () => openRecipe(card.dataset.id)));
+    }
+
+    function openRecipe(id) {
+      const r = RECIPES.find(x=>x.id===id); if (!r) return;
+      $('#modalTitle').textContent = r.name;
+      $('#modalSubtitle').textContent = r.tags.join(' • ');
+      $('#modalImg').src = r.img; $('#modalImg').alt = r.name;
+      // Info grid
+      $('#modalInfo').innerHTML = `
+        <div class="info-item"><b>${r.time} min</b><span>Time</span></div>
+        <div class="info-item"><b>${r.servings || 2}</b><span>Servings</span></div>
+        <div class="info-item"><b>${r.difficulty || 'Easy'}</b><span>Difficulty</span></div>
+        <div class="info-item"><b>${r.rating}</b><span>Rating</span></div>
+      `;
+      // Description
+      $('#modalDesc').textContent = r.description || '';
+      $('#modalIngredients').innerHTML = r.ingredients.map(i=>`<li>${i}</li>`).join('');
+      $('#modalSteps').innerHTML = r.steps.map(s=>`<li>${s}</li>`).join('');
+      // Nutrition
+      const n = r.nutrition || {};
+      $('#modalNutrition').innerHTML = Object.keys(n).length ? [
+        n.calories != null ? `<li>Calories: ${n.calories}</li>` : '',
+        n.protein ? `<li>Protein: ${n.protein}</li>` : '',
+        n.fat ? `<li>Fat: ${n.fat}</li>` : '',
+        n.carbs ? `<li>Carbs: ${n.carbs}</li>` : ''
+      ].filter(Boolean).join('') : '<li>No nutrition data.</li>';
+      // Gallery
+      const g = (r.gallery && r.gallery.length ? r.gallery : [r.img]);
+      $('#modalGallery').innerHTML = g.map((src, i)=>`<img src="${src}" alt="${r.name} photo ${i+1}" ${i===0?'class="active"':''} loading="lazy" data-track="click view" data-track-type="action" data-track-id="galleryThumb" data-track-title="${r.name}">`).join('');
+      $$('#modalGallery img').forEach((imgEl, idx) => {
+        imgEl.addEventListener('click', () => {
+          $('#modalImg').src = imgEl.src;
+          $$('#modalGallery img').forEach(m=>m.classList.remove('active'));
+          imgEl.classList.add('active');
+        });
+      });
+      const m = $('#recipeModal'); m.classList.add('active'); m.removeAttribute('aria-hidden');
+      $('#closeModal').focus();
+    }
+
+    function closeModal() {
+      const m = $('#recipeModal'); m.classList.remove('active'); m.setAttribute('aria-hidden','true');
+    }
+
+    function wireHeader() {
+      $('#searchInput').addEventListener('input', (e)=>{ state.query = e.target.value; renderGrid(); });
+      $('#dietSelect').addEventListener('input', (e)=>{ state.diet = e.target.value; renderGrid(); });
+      $('#sortSelect').addEventListener('input', (e)=>{ state.sort = e.target.value; renderGrid(); });
+      $('#randomBtn').addEventListener('click', ()=>{ const r = RECIPES[Math.floor(Math.random()*RECIPES.length)]; openRecipe(r.id); });
+      $('#favoritesBtn').addEventListener('click', ()=>{
+        if (state.favorites.size === 0) return alert('No favorites yet. Tap the heart on any recipe.');
+        const list = RECIPES.filter(r=>state.favorites.has(r.id));
+        $('#grid').innerHTML = list.map(recipeCard).join('');
+      });
+      $('#subscribeBtn').addEventListener('click', ()=> { alert('Thank you! Newsletter coming soon.'); });
+      $('#joinBtn').addEventListener('click', ()=> {
+        const email = $('#email').value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert('Enter a valid email.');
+        alert('Welcome to Culina Asian!'); $('#email').value = '';
+      });
+    }
+
+    // Modal close and accessibility
+    $('#closeModal').addEventListener('click', closeModal);
+    $('#recipeModal').addEventListener('click', (e)=>{ if (e.target.id === 'recipeModal') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
+
+    // Init
+    (function init(){
+      renderCategoryChips();
+      renderGrid();
+      wireHeader();
+      saveFavs();
+    })();
+  </script>
+</body>
+</html>
