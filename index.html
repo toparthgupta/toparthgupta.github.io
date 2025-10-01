@@ -1016,7 +1016,7 @@
 				}
 			);
 			setTimeout(function() {
-			embeddedservice_configuration.util.setSessionContext([
+			agentforce_messaging.util.setSessionContext([
 			    {
 			        "name": "_AgentContext",
 			        "value": {
@@ -1030,7 +1030,7 @@
 			])
 .then(() => {
     console.log("Successfully set agent context.");
-    embeddedservice_configuration.util.sendTextMessage("This is a user message!");
+    agentforce_messaging.util.sendTextMessage("This is a user message!");
 })
 .catch((error) => {
     console.log("Error thrown while setting agent context." + error);
