@@ -1015,7 +1015,17 @@
 					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
 				}
 			);
-			agentforce_messaging.util.setSessionContext([{name: "User_Interest", value:{valueType: "StructuredValue", "value" : {"User_Interest": "STRAW"}}}])
+			agentforce_messaging.util.setSessionContext([
+                        {
+                            "name": "_AgentContext",
+                            "value": {
+                                "valueType": "StructuredValue",
+                                "value": {
+						"currentPage": "Strawberry", 
+                            }
+                        }
+                    ]
+		);
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
