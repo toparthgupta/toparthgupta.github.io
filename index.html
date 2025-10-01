@@ -1016,18 +1016,26 @@
 				}
 			);
 			setTimeout(function() {
-			agentforce_messaging.util.setSessionContext([
-                        {
-                            "name": "_AgentContext",
-                            "value": {
-                                "valueType": "StructuredValue",
-                                "value": {
-									"currentPage": "Strawberry", 
-                            	}
-                        	}
-						}
-                    ]
-		)}, 5000);
+			embeddedservice_configuration.util.setSessionContext([
+			    {
+			        "name": "_AgentContext",
+			        "value": {
+			            "valueType": "StructuredValue",
+			            "value": {
+			                "currentPage": "page1",
+			                "Interest": "Pineapple"
+			            }
+			        }
+			    }
+			])
+.then(() => {
+    console.log("Successfully set agent context.");
+    embeddedservice_configuration.util.sendTextMessage("This is a user message!");
+})
+.catch((error) => {
+    console.log("Error thrown while setting agent context." + error);
+});
+}, 5000);
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
