@@ -137,15 +137,16 @@
     },
     _trySetEngagement(sendSalesforceEvents = false){
       try {
-        if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
-          global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
-          global.agentforce_messaging.util.setSessionContext([
+        if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function') {
+          global.agentforce_messaging.utilAPI.setEngagement(global.INTEREST_KIT_DATA);
+          global.agentforce_messaging.utilAPI.setSessionContext([
                         {
                             "name": "_AgentContext",
                             "value": {
                                 "valueType": "StructuredValue",
                                 "value": {
-									"currentPage": "Strawberry", 
+									"currentPage": "Strawberry",
+									"User_Interest": "Strawberry", 
                             	}
                         	}
 						}
