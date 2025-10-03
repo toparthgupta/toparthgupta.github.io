@@ -881,15 +881,34 @@
 
     .recommendations-canvas {
       margin-top: 3rem;
-      padding: 2rem;
+      padding: 3rem 1rem;
       background: transparent;
       border-radius: 20px;
       border: 2px dashed rgba(244,63,94,0.2);
       min-height: 200px;
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      align-items: start;
       justify-content: center;
       position: relative;
+    }
+    
+    .recommendations-canvas .restaurant-card {
+      margin: 0;
+    }
+    
+    .recommendations-canvas .restaurant-content {
+      padding: 1rem;
+    }
+    
+    .recommendations-canvas .restaurant-name {
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+    
+    .recommendations-canvas .delivery-fee {
+      color: var(--primary);
     }
 
     .canvas-placeholder {
@@ -961,7 +980,16 @@
       
       .recommendations-canvas {
         margin-top: 2rem;
-        padding: 1.5rem;
+        padding: 2rem 1rem;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .recommendations-canvas {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
       }
     }
 
@@ -1868,8 +1896,67 @@
         </div>
         
         <div class="recommendations-canvas" id="recommendationsCanvas">
-          <div class="canvas-placeholder">
-            Your personalized dish recommendations will appear here...
+          <!-- Recipe Recommendation 1 -->
+          <div class="restaurant-card" onclick="openDishModal('margherita-pizza')"
+               data-track="click view" 
+               data-track-type="recipe" 
+               data-track-id="margherita-pizza"
+               data-track-category="Pizza"
+               data-track-tags="Vegetarian,Popular"
+               data-track-title="Pizza Margherita"
+               style="cursor: pointer;">
+            <div style="position: relative;">
+              <img src="./assets/pizza.jpg" alt="Margherita Pizza" class="restaurant-image">
+              <div class="restaurant-badge">🌟 Recommended</div>
+            </div>
+            <div class="restaurant-content">
+              <div class="restaurant-header" style="margin-bottom: 0;">
+                <h3 class="restaurant-name">Pizza Margherita</h3>
+                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$18.99</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recipe Recommendation 2 -->
+          <div class="restaurant-card" onclick="openDishModal('carbonara')"
+               data-track="click view" 
+               data-track-type="recipe" 
+               data-track-id="carbonara"
+               data-track-category="Pasta"
+               data-track-tags="Classic,Popular"
+               data-track-title="Spaghetti Carbonara"
+               style="cursor: pointer;">
+            <div style="position: relative;">
+              <img src="./assets/carbonara.jpg" alt="Spaghetti Carbonara" class="restaurant-image">
+              <div class="restaurant-badge">🌟 Recommended</div>
+            </div>
+            <div class="restaurant-content">
+              <div class="restaurant-header" style="margin-bottom: 0;">
+                <h3 class="restaurant-name">Spaghetti Carbonara</h3>
+                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$16.99</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recipe Recommendation 3 -->
+          <div class="restaurant-card" onclick="openDishModal('tiramisu')"
+               data-track="click view" 
+               data-track-type="recipe" 
+               data-track-id="tiramisu"
+               data-track-category="Dessert"
+               data-track-tags="Sweet,Popular"
+               data-track-title="Classic Tiramisu"
+               style="cursor: pointer;">
+            <div style="position: relative;">
+              <img src="./assets/tiramisu.jpg" alt="Classic Tiramisu" class="restaurant-image">
+              <div class="restaurant-badge">🌟 Recommended</div>
+            </div>
+            <div class="restaurant-content">
+              <div class="restaurant-header" style="margin-bottom: 0;">
+                <h3 class="restaurant-name">Classic Tiramisu</h3>
+                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$8.99</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
