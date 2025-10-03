@@ -1,0 +1,3524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Bella Vista Kitchen — Authentic Italian Delivery</title>
+  <meta name="description" content="Order authentic Italian dishes made fresh daily. From handmade pasta to wood-fired pizza, delivered hot to your door.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Generic interest tracking framework -->
+  <script src="./interest-kit.js"></script>
+  <style>
+    :root {
+      /* Elegant Modern Color System - ORANGE BRANDING */
+      --primary: #ea580c;        /* Orange 600 */
+      --primary-light: #f59e0b;  /* Amber 500 */
+      --primary-dark: #c2410c;   /* Orange 700 */
+      --primary-50: #fff7ed;
+      --primary-100: #ffedd5;
+      --primary-200: #fed7aa;
+      --primary-300: #fdba74;
+      --primary-400: #fb923c;
+      --primary-500: #f97316;
+      --primary-600: #ea580c;
+      --primary-700: #c2410c;
+      --primary-800: #9a3412;
+      --primary-900: #7c2d12;
+      
+      --secondary: #10b981;
+      --secondary-light: #34d399;
+      --secondary-dark: #059669;
+      
+      --accent: #f59e0b;         /* Warm accent keeps harmony */
+      --accent-light: #fbbf24;
+      --accent-dark: #d97706;
+      
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      
+      /* Elegant Neutral System */
+      --white: #ffffff;
+      --gray-50: #fafafa;
+      --gray-100: #f4f4f5;
+      --gray-200: #e4e4e7;
+      --gray-300: #d4d4d8;
+      --gray-400: #a1a1aa;
+      --gray-500: #71717a;
+      --gray-600: #52525b;
+      --gray-700: #3f3f46;
+      --gray-800: #27272a;
+      --gray-900: #18181b;
+      
+      /* Clean Typography */
+      --text-primary: var(--gray-900);
+      --text-secondary: var(--gray-600);
+      --text-muted: var(--gray-500);
+      --text-light: var(--gray-400);
+      
+      /* Clean Backgrounds */
+      --bg-primary: var(--white);
+      --bg-secondary: var(--gray-50);
+      --bg-tertiary: var(--gray-100);
+      
+      /* Clean Gradients */
+      --gradient-primary: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      --gradient-hero: linear-gradient(135deg, var(--bg-primary) 0%, #fff7ed 100%);
+      
+      /* Elegant Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* Clean Border Radius */
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-full: 9999px;
+      
+      /* Clean Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      
+      /* Smooth Transitions */
+      --transition: all 0.2s ease;
+      --transition-slow: all 0.3s ease;
+      
+      /* Container */
+      --container-max: 1200px;
+      
+      /* Legacy Support */
+      --brand: var(--primary);
+      --text: var(--text-primary);
+      --muted: var(--text-muted);
+      --elevated: var(--bg-primary);
+      --surface: var(--bg-secondary);
+    }
+
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; }
+
+    /* Clean Layout */
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 var(--space-4);
+      }
+    }
+
+    /* Elegant Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-200);
+      transition: var(--transition);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) 0;
+      height: 70px;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius);
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .cart-btn {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+    }
+
+    .cart-btn:hover {
+      background: var(--elevated);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+      border-color: rgba(244, 63, 94, 0.2);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--brand);
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      border: 2px solid white;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-600);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl), var(--glow);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid rgba(15, 23, 42, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: var(--elevated);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Clean Hero Section */
+    .hero {
+      padding: var(--space-24) 0 var(--space-20);
+      text-align: center;
+      background: var(--bg-primary);
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      margin: 0 0 var(--space-6);
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .hero-highlight {
+      color: var(--primary);
+    }
+
+    /* Advanced Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes heroGlow {
+      0% { filter: drop-shadow(0 4px 8px rgba(244, 63, 94, 0.2)); }
+      100% { filter: drop-shadow(0 6px 12px rgba(244, 63, 94, 0.4)); }
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-8);
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-12);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--gradient-primary);
+      color: white;
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-50);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-search {
+      max-width: 720px;
+      margin: 0 auto var(--space-12);
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      font-size: 1.1rem;
+      background: var(--elevated);
+      box-shadow: var(--shadow-lg);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--brand-solid);
+      box-shadow: var(--shadow-xl), var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .search-input::placeholder {
+      color: var(--light-muted);
+      font-weight: 500;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .location-picker {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      color: var(--muted);
+    }
+
+    .location-btn {
+      background: none;
+      border: none;
+      color: var(--brand);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin: var(--space-16) 0;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .stat {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      background: var(--bg-primary);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 140px;
+    }
+
+    .stat:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-200);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Categories */
+    .categories {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      margin: 0 0 1.5rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .category-card {
+      background: var(--elevated);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 
+        0 4px 20px rgba(0,0,0,0.08),
+        0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      backdrop-filter: blur(10px);
+      transform-style: preserve-3d;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(244,63,94,0.05);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+    }
+
+    .category-card:hover::before {
+      opacity: 1;
+    }
+
+    .category-card:hover {
+      transform: translateY(-12px) rotateX(2deg) rotateY(2deg);
+      box-shadow: 
+        0 20px 40px rgba(244,63,94,0.15),
+        0 8px 16px rgba(0,0,0,0.1);
+      border-color: rgba(244, 63, 94, 0.3);
+    }
+
+    .category-image-container {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    .category-card:hover .category-image {
+      transform: scale(1.1);
+      filter: brightness(1) contrast(1.2);
+    }
+
+    .category-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.1);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .category-card:hover .category-overlay {
+      opacity: 1;
+    }
+
+    .category-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.95);
+      color: var(--brand);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 3;
+    }
+
+    .category-content {
+      padding: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 0 0.75rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .category-description {
+      color: var(--muted);
+      margin: 0 0 1.5rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .category-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .category-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+    }
+
+    .category-price {
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+      }
+
+      .stat {
+        padding: var(--space-6) var(--space-3);
+        min-height: 120px;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+      }
+      
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .category-card:hover {
+        transform: translateY(-8px);
+      }
+    }
+
+    /* Personalized Recommendations */
+    .recommendations {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .recommendations-container {
+      background: var(--elevated);
+      border-radius: 32px;
+      padding: 3rem;
+      box-shadow: 
+        0 8px 32px rgba(0,0,0,0.12),
+        0 2px 8px rgba(0,0,0,0.08);
+      border: 2px solid rgba(244,63,94,0.1);
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .recommendations-header {
+      margin-bottom: 2rem;
+    }
+
+    .recommendations-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--brand);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+      box-shadow: 0 4px 16px rgba(244,63,94,0.3);
+      position: relative;
+    }
+
+    .recommendations-icon::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      background: var(--brand);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .recommendations-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin: 0 0 1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .recommendations-subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 2.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .recommendations-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--brand);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(244,63,94,0.3);
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .recommendations-action::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transition: left 0.5s ease;
+    }
+
+    .recommendations-action:hover::before {
+      left: 100%;
+    }
+
+    .recommendations-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(244,63,94,0.4);
+    }
+
+    .recommendations-canvas {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: transparent;
+      border-radius: 20px;
+      border: 2px dashed rgba(244,63,94,0.2);
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .canvas-placeholder {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    .recommendations-tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .recommendations-tiles.show {
+      opacity: 1;
+    }
+
+    .recommendation-tile {
+      background: var(--elevated);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 1px solid rgba(244,63,94,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .recommendation-tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(244,63,94,0.15);
+      border-color: rgba(244,63,94,0.3);
+    }
+
+    .close-recommendations {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0,0,0,0.1);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    .close-recommendations:hover {
+      background: rgba(244,63,94,0.1);
+      color: var(--brand);
+    }
+
+    @media (max-width: 768px) {
+      .recommendations-container {
+        padding: 2rem;
+        margin: 0 1rem;
+      }
+      
+      .recommendations-title {
+        font-size: 2rem;
+      }
+      
+      .recommendations-canvas {
+        margin-top: 2rem;
+        padding: 1.5rem;
+      }
+    }
+
+    /* Menu Search Section */
+    .menu-search-section {
+      padding: 2rem 0 3rem;
+      top: 22px;
+      margin-top: -70px;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .menu-search-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .menu-search-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .menu-search-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .menu-search-input {
+      width: 100%;
+      padding: 1rem 3.5rem 1rem 3.5rem;
+      border: 2px solid var(--gray-300);
+      border-radius: var(--radius-xl);
+      font-size: 1.05rem;
+      background: var(--bg-primary);
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .menu-search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.1), var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .menu-search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .menu-clear-btn {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--gray-200);
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      z-index: 2;
+    }
+
+    .menu-clear-btn:hover {
+      background: var(--gray-300);
+      color: var(--text-primary);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .menu-clear-btn.visible {
+      display: flex;
+    }
+
+    .menu-search-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-chip {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-full);
+      background: var(--bg-primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--primary-300);
+      background: var(--primary-50);
+      transform: translateY(-1px);
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .search-results-info {
+      text-align: center;
+      padding: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .search-results-info.visible {
+      display: block;
+    }
+
+    .no-results-message {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+      display: none;
+    }
+
+    .no-results-message.visible {
+      display: block;
+    }
+
+    .no-results-message h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .no-results-message p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Popular Restaurants */
+    .restaurants {
+      padding: 4rem 0;
+      background: var(--surface);
+    }
+
+    .restaurant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .restaurant-card {
+      background: var(--elevated);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      border: 1px solid var(--glass-border);
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+
+    .restaurant-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.05);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .restaurant-card:hover::after {
+      opacity: 1;
+    }
+
+    .restaurant-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(244, 63, 94, 0.15);
+    }
+
+    .restaurant-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      position: relative;
+    }
+
+    .restaurant-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--brand);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .restaurant-content {
+      padding: 1.5rem;
+    }
+
+    .restaurant-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .restaurant-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text);
+    }
+
+    .restaurant-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--success);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .restaurant-cuisine {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .restaurant-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .delivery-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--muted);
+    }
+
+    .delivery-fee {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* How it Works */
+    .how-it-works {
+      padding: 4rem 0;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--accent) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.75rem;
+      color: var(--text);
+    }
+
+    .step-description {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--text);
+      color: white;
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero {
+        padding: 2rem 0 4rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .category-grid,
+      .restaurant-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    /* Advanced Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200px 0; }
+      100% { background-position: calc(200px + 100%) 0; }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide-in-left {
+      animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide-in-right {
+      animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scale-in {
+      animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .shimmer {
+      background: rgba(255,255,255,0.4);
+      animation: shimmer 2s infinite;
+    }
+
+    /* Staggered animations */
+    .category-card:nth-child(1) { animation-delay: 0.1s; }
+    .category-card:nth-child(2) { animation-delay: 0.2s; }
+    .category-card:nth-child(3) { animation-delay: 0.3s; }
+    .category-card:nth-child(4) { animation-delay: 0.4s; }
+    .category-card:nth-child(5) { animation-delay: 0.5s; }
+    .category-card:nth-child(6) { animation-delay: 0.6s; }
+
+    .restaurant-card:nth-child(1) { animation-delay: 0.1s; }
+    .restaurant-card:nth-child(2) { animation-delay: 0.2s; }
+    .restaurant-card:nth-child(3) { animation-delay: 0.3s; }
+    .restaurant-card:nth-child(4) { animation-delay: 0.4s; }
+    .restaurant-card:nth-child(5) { animation-delay: 0.5s; }
+    .restaurant-card:nth-child(6) { animation-delay: 0.6s; }
+    .restaurant-card:nth-child(7) { animation-delay: 0.7s; }
+    .restaurant-card:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Cart Sidebar */
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: var(--elevated);
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .cart-sidebar.open {
+      right: 0;
+    }
+
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .cart-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .cart-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .cart-items {
+      padding: 1.5rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--muted);
+    }
+
+
+
+    /* Dish Details Modal */
+    .dish-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .dish-modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .dish-modal {
+      background: var(--elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+
+    .dish-modal-overlay.show .dish-modal {
+      transform: scale(1);
+    }
+
+    .dish-modal-header {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .dish-modal-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dish-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--text);
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .dish-modal-close:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.1);
+    }
+
+    .dish-modal-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--brand);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .dish-modal-content {
+      padding: 2rem;
+    }
+
+    .dish-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: var(--text);
+    }
+
+    .dish-modal-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--brand-solid);
+      margin-bottom: 1rem;
+    }
+
+    .dish-modal-description {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .dish-modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dish-tag {
+      background: var(--surface);
+      color: var(--text);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      border: 1px solid var(--glass-border);
+    }
+
+    .dish-modal-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem;
+    }
+
+    .quantity-btn {
+      background: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .quantity-btn:hover {
+      background: var(--brand-solid);
+      color: white;
+    }
+
+    .quantity-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .quantity-btn:disabled:hover {
+      background: none;
+      color: inherit;
+    }
+
+    .quantity-display {
+      min-width: 40px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .add-to-cart-btn {
+      flex: 1;
+      background: var(--brand);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .add-to-cart-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transition: left 0.5s;
+    }
+
+    .add-to-cart-btn:hover::before {
+      left: 100%;
+    }
+
+    .add-to-cart-btn:hover {
+      background: var(--brand-600);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    @media (max-width: 768px) {
+      .dish-modal {
+        width: 95%;
+        margin: 1rem;
+      }
+      
+      .dish-modal-header {
+        height: 250px;
+      }
+      
+      .dish-modal-content {
+        padding: 1.5rem;
+      }
+      
+      .dish-modal-actions {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .quantity-selector {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="logo">
+          Haven Kitchen
+        </div>
+        
+        <ul class="nav-links">
+          <li><a href="#menu" class="nav-link">Menu</a></li>
+          <li><a href="#specials" class="nav-link">Today's Specials</a></li>
+          <li><a href="#about" class="nav-link">About Us</a></li>
+          <li><a href="#" class="nav-link">Track Order</a></li>
+        </ul>
+        
+        <div class="nav-actions">
+          <button class="cart-btn" onclick="toggleCart()">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          <a href="#" class="btn btn-primary">Sign In</a>
+          <button class="mobile-menu-btn">☰</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Clean Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>
+          Authentic <span class="hero-highlight">Cuisines</span>
+        </h1>
+        <p>Experience the taste of cuisines around the world with our handcrafted pasta, wood-fired pizza, and more exceptional recipes.</p>
+        
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="scrollToSection('menu')">
+            Explore Menu
+          </button>
+          <a href="#specials" class="btn-secondary">
+            Today's Specials
+          </a>
+        </div>
+        
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">50+</span>
+            <div class="stat-label">Signature Dishes</div>
+          </div>
+          <div class="stat">
+            <span class="stat-number">30min</span>
+            <div class="stat-label">Fresh & Hot Delivery</div>
+          </div>
+          <div class="stat">
+            <span class="stat-number">25k+</span>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+          <div class="stat">
+            <span class="stat-number">4.8★</span>
+            <div class="stat-label">Customer Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Personalized Recommendations -->
+  <section class="recommendations" style="margin-top: -100px;" id="recommendations">
+    <div class="container">
+      <div class="recommendations-container">
+        <button class="close-recommendations" onclick="hideRecommendations()" title="Close">
+          ✕
+        </button>
+        
+        <div class="recommendations-header">
+          <div class="recommendations-icon">
+            🍽️
+          </div>
+          <h2 class="recommendations-title">Ready for Personalized Dish Recommendations?</h2>
+          <p class="recommendations-subtitle">
+            Chat with our AI Food Guide to get customized dish suggestions based 
+            on your taste preferences, dietary needs, and culinary adventure level.
+          </p>
+          <button class="recommendations-action" onclick="showFoodRecommendations()">
+            <span>🤖</span>
+            Chat with Food Guide
+          </button>
+        </div>
+        
+        <div class="recommendations-canvas" id="recommendationsCanvas">
+          <div class="canvas-placeholder">
+            Your personalized dish recommendations will appear here...
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories" style="margin-top: -100px;" id="menu">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Explore Our Culinary World</h2>
+        <p class="section-subtitle">From authentic Italian classics to international favorites, discover a world of flavors crafted with passion and the finest ingredients</p>
+      </div>
+      
+      <div class="category-grid">
+        <!-- Italian Pizza -->
+        <div class="category-card" onclick="scrollToSection('pizza-menu')" 
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="pizza">
+          <div class="category-image-container">
+            <img src="./assets/pizza.jpg" alt="Authentic Italian Pizza" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Popular</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">Wood-Fired Pizza</h3>
+            <p class="category-description">Authentic Neapolitan pizza with fresh mozzarella, San Marzano tomatoes, and aromatic basil</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🔥 Wood-fired</span>
+                <span class="stat-item">🍕 12 varieties</span>
+              </div>
+              <span class="category-price">From $16</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fresh Pasta -->
+        
+        <!-- Asian Cuisine -->
+        <div class="category-card" onclick="scrollToSection('asian-menu')"
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="asian">
+          <div class="category-image-container">
+            <img src="./assets/pad-thai.jpg" alt="Asian Cuisine" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Authentic</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">Asian Delights</h3>
+            <p class="category-description">Authentic Asian flavors from Thailand, Japan, and beyond with fresh ingredients and bold spices</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🌶️ Spicy options</span>
+                <span class="stat-item">🥢 8 dishes</span>
+              </div>
+              <span class="category-price">From $19</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- American Classics -->
+        <div class="category-card" onclick="scrollToSection('american-menu')"
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="american">
+          <div class="category-image-container">
+            <img src="./assets/burger.jpg" alt="American Classics" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Comfort Food</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">American Classics</h3>
+            <p class="category-description">Hearty comfort food favorites including gourmet burgers, BBQ ribs, and breakfast classics</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🍔 Gourmet</span>
+                <span class="stat-item">🥓 6 favorites</span>
+              </div>
+              <span class="category-price">From $15</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fresh Salads -->
+        
+        <!-- Premium Seafood -->
+        <div class="category-card" onclick="scrollToSection('seafood-menu')"
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="seafood">
+          <div class="category-image-container">
+            <img src="./assets/salmon.jpg" alt="Premium Seafood" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Premium</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">Ocean's Finest</h3>
+            <p class="category-description">Fresh Atlantic salmon, sushi-grade fish, and premium seafood prepared with culinary expertise</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🐟 Fresh daily</span>
+                <span class="stat-item">⭐ Premium</span>
+            </div>
+              <span class="category-price">From $26</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mexican Flavors -->
+        <div class="category-card" onclick="scrollToSection('mexican-menu')"
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="mexican">
+          <div class="category-image-container">
+            <img src="./assets/tacos.jpg" alt="Mexican Cuisine" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Spicy</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">Mexican Fiesta</h3>
+            <p class="category-description">Bold Mexican flavors with street tacos, enchiladas, and traditional spices that transport you to Mexico</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🌮 Street style</span>
+                <span class="stat-item">🌶️ 4 dishes</span>
+              </div>
+              <span class="category-price">From $16</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Sweet Endings -->
+        <div class="category-card" onclick="scrollToSection('desserts-menu')"
+             data-track="click" 
+             data-track-type="section" 
+             data-track-id="desserts">
+          <div class="category-image-container">
+            <img src="./assets/tiramisu.jpg" alt="Decadent Desserts" class="category-image">
+            <div class="category-overlay"></div>
+            <div class="category-badge">Decadent</div>
+          </div>
+          <div class="category-content">
+            <h3 class="category-title">Sweet Endings</h3>
+            <p class="category-description">Indulgent desserts including classic tiramisu, rich brownies, and artisanal treats to end your meal perfectly</p>
+            <div class="category-meta">
+              <div class="category-stats">
+                <span class="stat-item">🍰 House-made</span>
+                <span class="stat-item">🍫 8 desserts</span>
+              </div>
+              <span class="category-price">From $8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- Featured Dishes -->
+  <section class="restaurants" id="specials">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="dishesTitle">Our Specials</h2>
+        <p class="section-subtitle" id="dishesSubtitle">Chef's recommended dishes made with the finest ingredients</p>
+      </div>
+
+      <!-- Menu Search Section -->
+  <section class="menu-search-section" id="menu-search">
+    <div class="container">
+      <div class="menu-search-container">
+        <div class="menu-search-wrapper">
+          <span class="menu-search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="menuSearchInput"
+            class="menu-search-input" 
+            placeholder="Search all dishes: pizza, pasta, salad, desserts..."
+            data-track="input" 
+            data-track-type="search"
+          >
+          <button class="menu-clear-btn" id="menuClearBtn" aria-label="Clear search">
+            ✕
+          </button>
+        </div>
+        
+        <div class="menu-search-filters">
+          <button class="filter-chip" data-filter="all">All Dishes</button>
+          <button class="filter-chip" data-filter="Italian">🍝 Italian</button>
+          <button class="filter-chip" data-filter="American">🍔 American</button>
+          <button class="filter-chip" data-filter="Asian">🍜 Asian</button>
+          <button class="filter-chip" data-filter="Mexican">🌮 Mexican</button>
+          <button class="filter-chip" data-filter="Vegetarian">🥗 Vegetarian</button>
+          <button class="filter-chip" data-filter="Seafood">🦐 Seafood</button>
+          <button class="filter-chip" data-filter="Dessert">🍰 Desserts</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="search-results-info" id="searchResultsInfo"></div>
+      
+      <div class="no-results-message" id="noResultsMessage">
+        <h3>🔍 No dishes found</h3>
+        <p>Try adjusting your search or filter to find what you're looking for</p>
+      </div>
+      
+      <div class="restaurant-grid" id="dishesGrid">
+        <!-- Italian Classics -->
+        <div class="restaurant-card" onclick="openDishModal('margherita-pizza')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="margherita-pizza"
+             data-track-category="Pizza"
+             data-track-tags="Vegetarian,Popular"
+             data-track-title="Pizza Margherita">
+          <div style="position: relative;">
+            <img src="./assets/pizza.jpg" alt="Margherita Pizza" class="restaurant-image">
+            <div class="restaurant-badge">Chef's Choice</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Pizza Margherita</h3>
+              <div class="restaurant-rating">$18.99</div>
+            </div>
+            <p class="restaurant-cuisine">Fresh mozzarella, San Marzano tomatoes, basil, extra virgin olive oil</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Wood-fired</span>
+                <span>•</span>
+                <span class="delivery-fee">Vegetarian</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="restaurant-card" onclick="openDishModal('spaghetti-carbonara')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="spaghetti-carbonara"
+             data-track-category="Pasta"
+             data-track-tags="Traditional,Creamy"
+             data-track-title="Spaghetti Carbonara">
+          <div style="position: relative;">
+            <img src="./assets/carbonara.jpg" alt="Spaghetti Carbonara" class="restaurant-image">
+            <div class="restaurant-badge">Signature</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Spaghetti Carbonara</h3>
+              <div class="restaurant-rating">$22.99</div>
+            </div>
+            <p class="restaurant-cuisine">Fresh pasta, pancetta, farm eggs, Pecorino Romano, black pepper</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Made fresh</span>
+                <span>•</span>
+                <span class="delivery-fee">Traditional</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="restaurant-card" onclick="openDishModal('lasagna-classica')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="lasagna-classica"
+             data-track-category="Pasta"
+             data-track-tags="Traditional,Comfort Food"
+             data-track-title="Lasagna della Casa">
+          <div style="position: relative;">
+            <img src="./assets/lasagna.jpg" alt="Lasagna della Casa" class="restaurant-image">
+            <div class="restaurant-badge">Family Recipe</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Lasagna della Casa</h3>
+              <div class="restaurant-rating">$24.99</div>
+              </div>
+            <p class="restaurant-cuisine">Rich meat sauce, béchamel, ricotta, mozzarella, family recipe</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Baked fresh</span>
+                <span>•</span>
+                <span class="delivery-fee">Hearty</span>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asian Cuisine -->
+        <div class="restaurant-card" onclick="openDishModal('pad-thai')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="pad-thai"
+             data-track-category="Asian"
+             data-track-tags="Thai,Spicy,Authentic"
+             data-track-title="Authentic Pad Thai">
+          <div style="position: relative;">
+            <img src="./assets/pad-thai.jpg" alt="Pad Thai" class="restaurant-image">
+            <div class="restaurant-badge">Thai Classic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Authentic Pad Thai</h3>
+              <div class="restaurant-rating">$18.99</div>
+            </div>
+            <p class="restaurant-cuisine">Rice noodles, shrimp, tofu, bean sprouts, tamarind sauce</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Stir-fried</span>
+                <span>•</span>
+                <span class="delivery-fee">Authentic</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="restaurant-card" onclick="openDishModal('ramen-bowl')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="ramen-bowl"
+             data-track-category="Asian"
+             data-track-tags="Japanese,Comfort Food"
+             data-track-title="Tonkotsu Ramen">
+          <div style="position: relative;">
+            <img src="./assets/ramen.jpg" alt="Tonkotsu Ramen" class="restaurant-image">
+            <div class="restaurant-badge">Authentic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Tonkotsu Ramen</h3>
+              <div class="restaurant-rating">$19.99</div>
+              </div>
+            <p class="restaurant-cuisine">Rich pork broth, fresh noodles, chashu pork, soft egg</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Soul-warming</span>
+                <span>•</span>
+                <span class="delivery-fee">Rich</span>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- American Favorites -->
+        <div class="restaurant-card" onclick="openDishModal('classic-burger')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="classic-burger"
+             data-track-category="American"
+             data-track-tags="American,Comfort Food"
+             data-track-title="Classic American Burger">
+          <div style="position: relative;">
+            <img src="./assets/burger.jpg" alt="Classic Burger" class="restaurant-image">
+            <div class="restaurant-badge">All-American</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Classic American Burger</h3>
+              <div class="restaurant-rating">$19.99</div>
+            </div>
+            <p class="restaurant-cuisine">Juicy beef patty, lettuce, tomato, special sauce, brioche bun</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>With fries</span>
+                <span>•</span>
+                <span class="delivery-fee">Popular</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mexican Cuisine -->
+        <div class="restaurant-card" onclick="openDishModal('street-tacos')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="street-tacos"
+             data-track-category="Mexican"
+             data-track-tags="Mexican,Street Food"
+             data-track-title="Street Tacos Trio">
+          <div style="position: relative;">
+            <img src="./assets/tacos.jpg" alt="Street Tacos" class="restaurant-image">
+            <div class="restaurant-badge">Authentic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Street Tacos Trio</h3>
+              <div class="restaurant-rating">$16.99</div>
+            </div>
+            <p class="restaurant-cuisine">Carnitas, carne asada, al pastor with onions, cilantro, lime</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Street style</span>
+                <span>•</span>
+                <span class="delivery-fee">Spicy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seafood -->
+        <div class="restaurant-card" onclick="openDishModal('grilled-salmon')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="grilled-salmon"
+             data-track-category="Seafood"
+             data-track-tags="Seafood,Healthy,Fresh"
+             data-track-title="Grilled Atlantic Salmon">
+          <div style="position: relative;">
+            <img src="./assets/salmon.jpg" alt="Grilled Salmon" class="restaurant-image">
+            <div class="restaurant-badge">Fresh Catch</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Grilled Atlantic Salmon</h3>
+              <div class="restaurant-rating">$26.99</div>
+            </div>
+            <p class="restaurant-cuisine">Fresh salmon, lemon herb butter, roasted vegetables, wild rice</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Grilled fresh</span>
+                <span>•</span>
+                <span class="delivery-fee">Healthy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desserts -->
+        <div class="restaurant-card" onclick="openDishModal('tiramisu')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="tiramisu"
+             data-track-category="Dolci"
+             data-track-tags="Dessert,Coffee,Traditional"
+             data-track-title="Tiramisu della Casa">
+          <div style="position: relative;">
+            <img src="./assets/tiramisu.jpg" alt="Tiramisu" class="restaurant-image">
+            <div class="restaurant-badge">House Made</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Tiramisu della Casa</h3>
+              <div class="restaurant-rating">$12.99</div>
+            </div>
+            <p class="restaurant-cuisine">Mascarpone, ladyfingers, espresso, cocoa, Marsala wine</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Classic recipe</span>
+                <span>•</span>
+                <span class="delivery-fee">Dessert</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('ny-cheesecake')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="ny-cheesecake"
+             data-track-category="Desserts"
+             data-track-tags="Dessert,Creamy,Classic"
+             data-track-title="New York Cheesecake">
+          <div style="position: relative;">
+            <img src="./assets/cheesecake.jpg" alt="NY Cheesecake" class="restaurant-image">
+            <div class="restaurant-badge">Classic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">New York Cheesecake</h3>
+              <div class="restaurant-rating">$11.99</div>
+              </div>
+            <p class="restaurant-cuisine">Creamy cheesecake, graham crust, fresh berry compote</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>NY style</span>
+                <span>•</span>
+                <span class="delivery-fee">Rich</span>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('chocolate-brownies')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="chocolate-brownies"
+             data-track-category="Desserts"
+             data-track-tags="Dessert,Chocolate,Rich"
+             data-track-title="Fudge Brownies">
+          <div style="position: relative;">
+            <img src="./assets/brownies.jpg" alt="Fudge Brownies" class="restaurant-image">
+            <div class="restaurant-badge">Decadent</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Fudge Brownies</h3>
+              <div class="restaurant-rating">$9.99</div>
+            </div>
+            <p class="restaurant-cuisine">Belgian chocolate brownies with vanilla ice cream</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Rich & fudgy</span>
+                <span>•</span>
+                <span class="delivery-fee">Decadent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Italian -->
+        <div class="restaurant-card" onclick="openDishModal('risotto-funghi')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="risotto-funghi"
+             data-track-category="Risotto"
+             data-track-tags="Mushroom,Creamy,Vegetarian"
+             data-track-title="Risotto ai Funghi">
+          <div style="position: relative;">
+            <img src="./assets/risotto.jpg" alt="Risotto ai Funghi" class="restaurant-image">
+            <div class="restaurant-badge">Popular</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Risotto ai Funghi</h3>
+              <div class="restaurant-rating">$26.99</div>
+            </div>
+            <p class="restaurant-cuisine">Arborio rice, wild mushrooms, Parmigiano-Reggiano, white wine</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Slow cooked</span>
+                <span>•</span>
+                <span class="delivery-fee">Vegetarian</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('caprese-salad')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="caprese-salad"
+             data-track-category="Antipasti"
+             data-track-tags="Fresh,Vegetarian,Light"
+             data-track-title="Caprese Salad">
+          <div style="position: relative;">
+            <img src="./assets/caprese.jpg" alt="Caprese Salad" class="restaurant-image">
+            <div class="restaurant-badge">Fresh Daily</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Caprese Salad</h3>
+              <div class="restaurant-rating">$16.99</div>
+              </div>
+            <p class="restaurant-cuisine">Fresh mozzarella, vine tomatoes, basil, balsamic vinegar</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Fresh daily</span>
+                <span>•</span>
+                <span class="delivery-fee">Light</span>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More American -->
+        <div class="restaurant-card" onclick="openDishModal('bbq-ribs')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="bbq-ribs"
+             data-track-category="American"
+             data-track-tags="BBQ,Smoky,Tender"
+             data-track-title="BBQ Baby Back Ribs">
+          <div style="position: relative;">
+            <img src="./assets/bbq-ribs.jpg" alt="BBQ Ribs" class="restaurant-image">
+            <div class="restaurant-badge">Smoky Goodness</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">BBQ Baby Back Ribs</h3>
+              <div class="restaurant-rating">$28.99</div>
+            </div>
+            <p class="restaurant-cuisine">Slow-smoked ribs, signature BBQ sauce, coleslaw, cornbread</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Slow-smoked</span>
+                <span>•</span>
+                <span class="delivery-fee">Tender</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('french-toast')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="french-toast"
+             data-track-category="Breakfast"
+             data-track-tags="Breakfast,Sweet,Comfort Food"
+             data-track-title="Classic French Toast">
+          <div style="position: relative;">
+            <img src="./assets/french-toast.jpg" alt="French Toast" class="restaurant-image">
+            <div class="restaurant-badge">Breakfast Special</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Classic French Toast</h3>
+              <div class="restaurant-rating">$14.99</div>
+            </div>
+            <p class="restaurant-cuisine">Brioche, vanilla custard, maple syrup, fresh berries</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Golden brown</span>
+                <span>•</span>
+                <span class="delivery-fee">Sweet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('fluffy-pancakes')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="fluffy-pancakes"
+             data-track-category="Breakfast"
+             data-track-tags="Breakfast,Fluffy,Sweet"
+             data-track-title="Fluffy Buttermilk Pancakes">
+          <div style="position: relative;">
+            <img src="./assets/pancakes.jpg" alt="Pancakes" class="restaurant-image">
+            <div class="restaurant-badge">Morning Favorite</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Fluffy Buttermilk Pancakes</h3>
+              <div class="restaurant-rating">$12.99</div>
+            </div>
+            <p class="restaurant-cuisine">Three fluffy pancakes, butter, maple syrup, fresh fruit</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Stack of 3</span>
+                <span>•</span>
+                <span class="delivery-fee">Fluffy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Asian -->
+        <div class="restaurant-card" onclick="openDishModal('thai-curry')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="thai-curry"
+             data-track-category="Asian"
+             data-track-tags="Thai,Spicy,Coconut"
+             data-track-title="Green Thai Curry">
+          <div style="position: relative;">
+            <img src="./assets/thai-curry.jpg" alt="Thai Curry" class="restaurant-image">
+            <div class="restaurant-badge">Spicy 🌶️</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Green Thai Curry</h3>
+              <div class="restaurant-rating">$21.99</div>
+            </div>
+            <p class="restaurant-cuisine">Coconut milk, Thai basil, bamboo shoots, jasmine rice</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Aromatic</span>
+                <span>•</span>
+                <span class="delivery-fee">Spicy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('sushi-platter')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="sushi-platter"
+             data-track-category="Asian"
+             data-track-tags="Japanese,Fresh,Premium"
+             data-track-title="Chef's Sushi Selection">
+          <div style="position: relative;">
+            <img src="./assets/sushi.jpg" alt="Sushi Platter" class="restaurant-image">
+            <div class="restaurant-badge">Chef's Choice</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Chef's Sushi Selection</h3>
+              <div class="restaurant-rating">$32.99</div>
+            </div>
+            <p class="restaurant-cuisine">Fresh nigiri, sashimi, salmon, tuna, yellowtail</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Fresh daily</span>
+                <span>•</span>
+                <span class="delivery-fee">Premium</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Mexican -->
+        <div class="restaurant-card" onclick="openDishModal('chicken-enchiladas')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="chicken-enchiladas"
+             data-track-category="Mexican"
+             data-track-tags="Mexican,Traditional,Comfort Food"
+             data-track-title="Chicken Enchiladas">
+          <div style="position: relative;">
+            <img src="./assets/enchiladas.jpg" alt="Chicken Enchiladas" class="restaurant-image">
+            <div class="restaurant-badge">Traditional</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Chicken Enchiladas</h3>
+              <div class="restaurant-rating">$18.99</div>
+            </div>
+            <p class="restaurant-cuisine">Corn tortillas, seasoned chicken, enchilada sauce, cheese</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>With rice & beans</span>
+                <span>•</span>
+                <span class="delivery-fee">Cheesy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mediterranean -->
+        <div class="restaurant-card" onclick="openDishModal('falafel-platter')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="falafel-platter"
+             data-track-category="Mediterranean"
+             data-track-tags="Mediterranean,Vegetarian,Healthy"
+             data-track-title="Mediterranean Falafel">
+          <div style="position: relative;">
+            <img src="./assets/falafel.jpg" alt="Falafel Platter" class="restaurant-image">
+            <div class="restaurant-badge">Vegetarian</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Mediterranean Falafel</h3>
+              <div class="restaurant-rating">$17.99</div>
+            </div>
+            <p class="restaurant-cuisine">Crispy chickpea falafel, hummus, tabbouleh, pita bread</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Fresh & healthy</span>
+                <span>•</span>
+                <span class="delivery-fee">Vegetarian</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Salads -->
+        <div class="restaurant-card" onclick="openDishModal('greek-salad')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="greek-salad"
+             data-track-category="Salads"
+             data-track-tags="Greek,Fresh,Healthy"
+             data-track-title="Traditional Greek Salad">
+          <div style="position: relative;">
+            <img src="./assets/greek-salad.jpg" alt="Greek Salad" class="restaurant-image">
+            <div class="restaurant-badge">Fresh & Healthy</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Traditional Greek Salad</h3>
+              <div class="restaurant-rating">$15.99</div>
+            </div>
+            <p class="restaurant-cuisine">Lettuce, tomatoes, cucumbers, olives, feta cheese</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Olive oil dressing</span>
+                <span>•</span>
+                <span class="delivery-fee">Fresh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('caesar-salad')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="caesar-salad"
+             data-track-category="Salads"
+             data-track-tags="Classic,Fresh,Crispy"
+             data-track-title="Classic Caesar Salad">
+          <div style="position: relative;">
+            <img src="./assets/caesar-salad.jpg" alt="Caesar Salad" class="restaurant-image">
+            <div class="restaurant-badge">Classic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Classic Caesar Salad</h3>
+              <div class="restaurant-rating">$14.99</div>
+            </div>
+            <p class="restaurant-cuisine">Romaine lettuce, Caesar dressing, parmesan, croutons</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>House-made dressing</span>
+                <span>•</span>
+                <span class="delivery-fee">Crispy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Desserts -->
+        <div class="restaurant-card" onclick="openDishModal('creme-brulee')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="creme-brulee"
+             data-track-category="Desserts"
+             data-track-tags="Dessert,French,Elegant"
+             data-track-title="Vanilla Crème Brûlée">
+          <div style="position: relative;">
+            <img src="./assets/creme-brulee.jpg" alt="Crème Brûlée" class="restaurant-image">
+            <div class="restaurant-badge">French Classic</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Vanilla Crème Brûlée</h3>
+              <div class="restaurant-rating">$10.99</div>
+            </div>
+            <p class="restaurant-cuisine">Silky vanilla custard, caramelized sugar crust</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>French masterpiece</span>
+                <span>•</span>
+                <span class="delivery-fee">Elegant</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="restaurant-card" onclick="openDishModal('chocolate-cookies')"
+             data-track="click view" 
+             data-track-type="recipe" 
+             data-track-id="chocolate-cookies"
+             data-track-category="Desserts"
+             data-track-tags="Dessert,Homemade,Comfort Food"
+             data-track-title="Chocolate Chip Cookies">
+          <div style="position: relative;">
+            <img src="./assets/cookies.jpg" alt="Chocolate Chip Cookies" class="restaurant-image">
+            <div class="restaurant-badge">Homemade</div>
+          </div>
+          <div class="restaurant-content">
+            <div class="restaurant-header">
+              <h3 class="restaurant-name">Chocolate Chip Cookies</h3>
+              <div class="restaurant-rating">$7.99</div>
+            </div>
+            <p class="restaurant-cuisine">Warm, chewy cookies from grandma's recipe with milk</p>
+            <div class="restaurant-meta">
+              <div class="delivery-info">
+                <span>Grandma's recipe</span>
+                <span>•</span>
+                <span class="delivery-fee">Sweet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Get your favorite food delivered in just a few simple steps</p>
+      </div>
+      
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">📍</div>
+          <h3 class="step-title">Choose Location</h3>
+          <p class="step-description">Enter your delivery address and browse restaurants in your area</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">🍽️</div>
+          <h3 class="step-title">Pick Your Food</h3>
+          <p class="step-description">Browse menus, read reviews, and select your favorite dishes</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">💳</div>
+          <h3 class="step-title">Pay Securely</h3>
+          <p class="step-description">Complete your order with secure payment options</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">🚚</div>
+          <h3 class="step-title">Fast Delivery</h3>
+          <p class="step-description">Track your order and enjoy fresh food delivered to your door</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Bella Vista Kitchen</h3>
+          <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6;">
+            Authentic Italian cuisine crafted with love and tradition. From our family kitchen to your table, we bring the taste of Italy to your doorstep.
+          </p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Our Story</h3>
+          <ul class="footer-links">
+            <li><a href="#about">About Our Kitchen</a></li>
+            <li><a href="#">Our Chefs</a></li>
+            <li><a href="#">Italian Traditions</a></li>
+            <li><a href="#">Fresh Ingredients</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Menu</h3>
+          <ul class="footer-links">
+            <li><a href="#menu">Full Menu</a></li>
+            <li><a href="#specials">Today's Specials</a></li>
+            <li><a href="#">Wine Pairings</a></li>
+            <li><a href="#">Catering Menu</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Contact & Orders</h3>
+          <ul class="footer-links">
+            <li><a href="#">📞 (555) 123-PASTA</a></li>
+            <li><a href="#">📧 orders@bellavista.com</a></li>
+            <li><a href="#">Track Your Order</a></li>
+            <li><a href="#">Delivery Info</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2024 Bella Vista Kitchen. All rights reserved. Fatto con amore ❤️ in San Francisco.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Order</h3>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <p>Your cart is empty</p>
+        <p style="font-size: 0.9rem; color: var(--muted);">Add some delicious items to get started!</p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Dish Details Modal -->
+  <div class="dish-modal-overlay" id="dishModalOverlay" onclick="closeDishModal()">
+    <div class="dish-modal" onclick="event.stopPropagation()">
+      <div class="dish-modal-header">
+        <img id="dishModalImage" src="" alt="" class="dish-modal-image">
+        <button class="dish-modal-close" onclick="closeDishModal()">✕</button>
+        <div id="dishModalBadge" class="dish-modal-badge"></div>
+          </div>
+      <div class="dish-modal-content">
+        <h2 id="dishModalTitle" class="dish-modal-title"></h2>
+        <div id="dishModalPrice" class="dish-modal-price"></div>
+        <p id="dishModalDescription" class="dish-modal-description"></p>
+        <div id="dishModalTags" class="dish-modal-tags"></div>
+        <div class="dish-modal-actions">
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="changeQuantity(-1)" id="decreaseBtn">−</button>
+            <span class="quantity-display" id="quantityDisplay">1</span>
+            <button class="quantity-btn" onclick="changeQuantity(1)" id="increaseBtn">+</button>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCartFromModal()" id="addToCartModalBtn">
+            Add to Cart
+          </button>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    let cartCount = 0;
+    let cartItems = [];
+
+    function toggleCart() {
+      const sidebar = document.getElementById('cartSidebar');
+      const overlay = document.getElementById('cartOverlay');
+      
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    function addToCart(itemName) {
+      cartCount++;
+      cartItems.push(itemName);
+      
+      // Update cart count
+      document.getElementById('cartCount').textContent = cartCount;
+      
+      // Update cart display
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      const cartItemsContainer = document.getElementById('cartItems');
+      
+      if (cartItems.length === 0) {
+        cartItemsContainer.innerHTML = `
+          <div class="cart-empty">
+            <p>Your cart is empty</p>
+            <p style="font-size: 0.9rem; color: var(--muted);">Add some delicious items to get started!</p>
+          </div>
+        `;
+      } else {
+        cartItemsContainer.innerHTML = cartItems.map((item, index) => `
+          <div style="padding: 1rem 0; border-bottom: 1px solid rgba(15, 23, 42, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>${item}</span>
+              <button onclick="removeFromCart(${index})" style="background: var(--danger); color: white; border: none; border-radius: 4px; padding: 0.25rem 0.5rem; cursor: pointer;">Remove</button>
+            </div>
+          </div>
+        `).join('') + `
+          <div style="padding: 1rem 0; text-align: center;">
+            <button class="btn btn-primary" style="width: 100%;">Proceed to Checkout</button>
+          </div>
+        `;
+      }
+    }
+
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      cartCount--;
+      document.getElementById('cartCount').textContent = cartCount;
+      updateCartDisplay();
+    }
+
+
+    // Add scroll animations
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.category-card, .restaurant-card, .step');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('fade-in-up');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run on load
+
+    // Initialize the application
+    function initializeApp() {
+      console.log('Haven Kitchen app initialized');
+      // Initialize menu search functionality
+      initializeMenuSearch();
+    }
+
+    // Dish Modal Functions
+    let currentDish = null;
+    let modalQuantity = 1;
+
+    const dishData = {
+      // Italian Classics
+      'margherita-pizza': {
+        title: 'Pizza Margherita',
+        price: 18.99,
+        image: './assets/pizza.jpg',
+        badge: 'Chef\'s Choice',
+        description: 'Our signature Neapolitan-style pizza featuring fresh mozzarella di bufala, San Marzano tomatoes, fresh basil, and extra virgin olive oil on our wood-fired thin crust.',
+        tags: ['Vegetarian', 'Popular', 'Wood-fired', 'Traditional'],
+        category: 'Pizza'
+      },
+      'spaghetti-carbonara': {
+        title: 'Spaghetti Carbonara',
+        price: 22.99,
+        image: './assets/carbonara.jpg',
+        badge: 'Signature',
+        description: 'Authentic Roman carbonara with fresh spaghetti, crispy pancetta, farm-fresh eggs, aged Pecorino Romano, and freshly cracked black pepper. Made the traditional way.',
+        tags: ['Traditional', 'Creamy', 'Roman Style', 'Popular'],
+        category: 'Pasta'
+      },
+      'risotto-funghi': {
+        title: 'Risotto ai Funghi',
+        price: 26.99,
+        image: './assets/risotto.jpg',
+        badge: 'Popular',
+        description: 'Creamy Arborio rice slow-cooked with a medley of wild mushrooms, finished with Parmigiano-Reggiano, white wine, and fresh herbs. A true comfort dish.',
+        tags: ['Mushroom', 'Creamy', 'Vegetarian', 'Comfort Food'],
+        category: 'Risotto'
+      },
+      'lasagna-classica': {
+        title: 'Lasagna della Casa',
+        price: 24.99,
+        image: './assets/lasagna.jpg',
+        badge: 'Family Recipe',
+        description: 'Traditional layered lasagna with rich meat sauce, creamy béchamel, fresh ricotta, and melted mozzarella. Baked to golden perfection using our family recipe.',
+        tags: ['Traditional', 'Comfort Food', 'Family Style', 'Hearty'],
+        category: 'Pasta'
+      },
+      'tiramisu': {
+        title: 'Tiramisu della Casa',
+        price: 12.99,
+        image: './assets/tiramisu.jpg',
+        badge: 'House Made',
+        description: 'Our house-made tiramisu with layers of espresso-soaked ladyfingers, mascarpone cream, and a dusting of cocoa. Made fresh daily with Marsala wine.',
+        tags: ['Dessert', 'Coffee', 'Traditional', 'House Made'],
+        category: 'Dolci'
+      },
+      'caprese-salad': {
+        title: 'Caprese Salad',
+        price: 16.99,
+        image: './assets/caprese.jpg',
+        badge: 'Fresh Daily',
+        description: 'Fresh mozzarella di bufala, vine-ripened tomatoes, and fresh basil drizzled with aged balsamic vinegar and extra virgin olive oil.',
+        tags: ['Fresh', 'Vegetarian', 'Light', 'Traditional'],
+        category: 'Antipasti'
+      },
+      
+      // American Favorites
+      'classic-burger': {
+        title: 'Classic American Burger',
+        price: 19.99,
+        image: './assets/burger.jpg',
+        badge: 'All-American',
+        description: 'Juicy beef patty with lettuce, tomato, onion, pickles, and our special sauce on a toasted brioche bun. Served with crispy fries.',
+        tags: ['American', 'Comfort Food', 'Popular', 'Hearty'],
+        category: 'American'
+      },
+      'bbq-ribs': {
+        title: 'BBQ Baby Back Ribs',
+        price: 28.99,
+        image: './assets/bbq-ribs.jpg',
+        badge: 'Smoky Goodness',
+        description: 'Tender baby back ribs slow-smoked and glazed with our signature BBQ sauce. Served with coleslaw and cornbread.',
+        tags: ['BBQ', 'Smoky', 'Tender', 'American'],
+        category: 'American'
+      },
+      'french-toast': {
+        title: 'Classic French Toast',
+        price: 14.99,
+        image: './assets/french-toast.jpg',
+        badge: 'Breakfast Special',
+        description: 'Thick-cut brioche soaked in vanilla custard, griddled golden brown, and served with maple syrup and fresh berries.',
+        tags: ['Breakfast', 'Sweet', 'Comfort Food', 'Popular'],
+        category: 'Breakfast'
+      },
+      'fluffy-pancakes': {
+        title: 'Fluffy Buttermilk Pancakes',
+        price: 12.99,
+        image: './assets/pancakes.jpg',
+        badge: 'Morning Favorite',
+        description: 'Stack of three fluffy buttermilk pancakes served with butter, maple syrup, and your choice of fresh fruit or bacon.',
+        tags: ['Breakfast', 'Fluffy', 'Sweet', 'Classic'],
+        category: 'Breakfast'
+      },
+      
+      // Asian Cuisine
+      'pad-thai': {
+        title: 'Authentic Pad Thai',
+        price: 18.99,
+        image: './assets/pad-thai.jpg',
+        badge: 'Thai Classic',
+        description: 'Stir-fried rice noodles with shrimp, tofu, bean sprouts, eggs, and crushed peanuts in our authentic tamarind sauce.',
+        tags: ['Thai', 'Spicy', 'Authentic', 'Popular'],
+        category: 'Asian'
+      },
+      'thai-curry': {
+        title: 'Green Thai Curry',
+        price: 21.99,
+        image: './assets/thai-curry.jpg',
+        badge: 'Spicy 🌶️',
+        description: 'Aromatic green curry with coconut milk, Thai basil, bamboo shoots, and your choice of chicken, beef, or tofu. Served with jasmine rice.',
+        tags: ['Thai', 'Spicy', 'Coconut', 'Aromatic'],
+        category: 'Asian'
+      },
+      'ramen-bowl': {
+        title: 'Tonkotsu Ramen',
+        price: 19.99,
+        image: './assets/ramen.jpg',
+        badge: 'Authentic',
+        description: 'Rich pork bone broth with fresh ramen noodles, chashu pork, soft-boiled egg, nori, and green onions. A soul-warming bowl.',
+        tags: ['Japanese', 'Comfort Food', 'Rich', 'Authentic'],
+        category: 'Asian'
+      },
+      'sushi-platter': {
+        title: 'Chef\'s Sushi Selection',
+        price: 32.99,
+        image: './assets/sushi.jpg',
+        badge: 'Chef\'s Choice',
+        description: 'Fresh assortment of nigiri and sashimi featuring salmon, tuna, yellowtail, and seasonal fish. Served with wasabi and pickled ginger.',
+        tags: ['Japanese', 'Fresh', 'Premium', 'Raw Fish'],
+        category: 'Asian'
+      },
+      
+      // Mexican Flavors
+      'street-tacos': {
+        title: 'Street Tacos Trio',
+        price: 16.99,
+        image: './assets/tacos.jpg',
+        badge: 'Authentic',
+        description: 'Three authentic street tacos with carnitas, carne asada, and al pastor. Served with onions, cilantro, and lime.',
+        tags: ['Mexican', 'Street Food', 'Authentic', 'Spicy'],
+        category: 'Mexican'
+      },
+      'chicken-enchiladas': {
+        title: 'Chicken Enchiladas',
+        price: 18.99,
+        image: './assets/enchiladas.jpg',
+        badge: 'Traditional',
+        description: 'Corn tortillas filled with seasoned chicken, topped with red enchilada sauce, cheese, and sour cream. Served with rice and beans.',
+        tags: ['Mexican', 'Traditional', 'Comfort Food', 'Cheesy'],
+        category: 'Mexican'
+      },
+      
+      // Mediterranean & Middle Eastern
+      'falafel-platter': {
+        title: 'Mediterranean Falafel',
+        price: 17.99,
+        image: './assets/falafel.jpg',
+        badge: 'Vegetarian',
+        description: 'Crispy chickpea falafel served with hummus, tabbouleh, pita bread, and tahini sauce. Fresh and flavorful.',
+        tags: ['Mediterranean', 'Vegetarian', 'Healthy', 'Fresh'],
+        category: 'Mediterranean'
+      },
+      'greek-salad': {
+        title: 'Traditional Greek Salad',
+        price: 15.99,
+        image: './assets/greek-salad.jpg',
+        badge: 'Fresh & Healthy',
+        description: 'Crisp lettuce, tomatoes, cucumbers, red onions, olives, and feta cheese with oregano and olive oil dressing.',
+        tags: ['Greek', 'Fresh', 'Healthy', 'Vegetarian'],
+        category: 'Salads'
+      },
+      'caesar-salad': {
+        title: 'Classic Caesar Salad',
+        price: 14.99,
+        image: './assets/caesar-salad.jpg',
+        badge: 'Classic',
+        description: 'Crisp romaine lettuce tossed with our house-made Caesar dressing, parmesan cheese, and garlic croutons.',
+        tags: ['Classic', 'Fresh', 'Crispy', 'Popular'],
+        category: 'Salads'
+      },
+      
+      // Seafood
+      'grilled-salmon': {
+        title: 'Grilled Atlantic Salmon',
+        price: 26.99,
+        image: './assets/salmon.jpg',
+        badge: 'Fresh Catch',
+        description: 'Fresh Atlantic salmon grilled to perfection, served with lemon herb butter, roasted vegetables, and wild rice.',
+        tags: ['Seafood', 'Healthy', 'Fresh', 'Grilled'],
+        category: 'Seafood'
+      },
+      
+      // Desserts
+      'chocolate-brownies': {
+        title: 'Fudge Brownies',
+        price: 9.99,
+        image: './assets/brownies.jpg',
+        badge: 'Decadent',
+        description: 'Rich, fudgy chocolate brownies made with Belgian chocolate and topped with vanilla ice cream and chocolate sauce.',
+        tags: ['Dessert', 'Chocolate', 'Rich', 'Decadent'],
+        category: 'Desserts'
+      },
+      'ny-cheesecake': {
+        title: 'New York Cheesecake',
+        price: 11.99,
+        image: './assets/cheesecake.jpg',
+        badge: 'Classic',
+        description: 'Creamy New York-style cheesecake with graham cracker crust, served with fresh berry compote.',
+        tags: ['Dessert', 'Creamy', 'Classic', 'Rich'],
+        category: 'Desserts'
+      },
+      'creme-brulee': {
+        title: 'Vanilla Crème Brûlée',
+        price: 10.99,
+        image: './assets/creme-brulee.jpg',
+        badge: 'French Classic',
+        description: 'Silky vanilla custard topped with caramelized sugar crust. A French dessert masterpiece.',
+        tags: ['Dessert', 'French', 'Elegant', 'Creamy'],
+        category: 'Desserts'
+      },
+      'chocolate-cookies': {
+        title: 'Chocolate Chip Cookies',
+        price: 7.99,
+        image: './assets/cookies.jpg',
+        badge: 'Homemade',
+        description: 'Warm, chewy chocolate chip cookies made from our grandmother\'s recipe. Served with a glass of cold milk.',
+        tags: ['Dessert', 'Homemade', 'Comfort Food', 'Sweet'],
+        category: 'Desserts'
+      }
+    };
+
+    function openDishModal(dishId) {
+      const dish = dishData[dishId];
+      if (!dish) return;
+
+      currentDish = dishId;
+      modalQuantity = 1;
+
+      // Populate modal content
+      document.getElementById('dishModalTitle').textContent = dish.title;
+      document.getElementById('dishModalPrice').textContent = `$${dish.price.toFixed(2)}`;
+      document.getElementById('dishModalImage').src = dish.image;
+      document.getElementById('dishModalImage').alt = dish.title;
+      document.getElementById('dishModalBadge').textContent = dish.badge;
+      document.getElementById('dishModalDescription').textContent = dish.description;
+      document.getElementById('quantityDisplay').textContent = modalQuantity;
+      
+      // Update add to cart button text
+      updateModalCartButton();
+
+      // Populate tags
+      const tagsContainer = document.getElementById('dishModalTags');
+      tagsContainer.innerHTML = dish.tags.map(tag => 
+        `<span class="dish-tag">${tag}</span>`
+      ).join('');
+
+      // Show modal
+      document.getElementById('dishModalOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDishModal() {
+      document.getElementById('dishModalOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+      currentDish = null;
+      modalQuantity = 1;
+    }
+
+    function changeQuantity(delta) {
+      modalQuantity = Math.max(1, modalQuantity + delta);
+      document.getElementById('quantityDisplay').textContent = modalQuantity;
+      
+      // Update button states
+      document.getElementById('decreaseBtn').disabled = modalQuantity <= 1;
+      
+      updateModalCartButton();
+    }
+
+    function updateModalCartButton() {
+      const dish = dishData[currentDish];
+      if (!dish) return;
+      
+      const totalPrice = (dish.price * modalQuantity).toFixed(2);
+      const btn = document.getElementById('addToCartModalBtn');
+      btn.textContent = `Add ${modalQuantity} to Cart - $${totalPrice}`;
+    }
+
+    function addToCartFromModal() {
+      if (!currentDish) return;
+      
+      const dish = dishData[currentDish];
+      const itemName = `${dish.title} (${modalQuantity}x) - $${(dish.price * modalQuantity).toFixed(2)}`;
+      
+      // Add to cart multiple times based on quantity
+      for (let i = 0; i < modalQuantity; i++) {
+        addToCart(`${dish.title} - $${dish.price.toFixed(2)}`);
+      }
+      
+      closeDishModal();
+    }
+
+
+    // Scroll to menu section function
+    function scrollToSection(sectionId) {
+      // For now, scroll to the specials section since we haven't created individual menu sections yet
+      const specialsSection = document.getElementById('specials');
+      if (specialsSection) {
+        specialsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Recommendations functionality
+    function showFoodRecommendations() {
+      const canvas = document.getElementById('recommendationsCanvas');
+      const placeholder = canvas.querySelector('.canvas-placeholder');
+      
+      // Hide placeholder
+      if (placeholder) {
+        placeholder.style.display = 'none';
+      }
+      
+      // Show loading state
+      canvas.innerHTML = `
+        <div style="text-align: center; color: var(--muted);">
+          <div style="font-size: 2rem; margin-bottom: 1rem;">🤖</div>
+          <div>AI Food Guide is analyzing your preferences...</div>
+        </div>
+      `;
+      
+      // Simulate AI processing (replace with actual AI integration)
+      setTimeout(() => {
+        showSampleRecommendations();
+      }, 2000);
+    }
+
+    function showSampleRecommendations() {
+      const canvas = document.getElementById('recommendationsCanvas');
+      
+      // Sample recommendations (replace with actual AI-generated content)
+      const sampleTiles = `
+        <div class="recommendations-tiles show">
+          <div class="recommendation-tile" onclick="openDishModal('margherita-pizza')">
+            <h4 style="margin: 0 0 0.5rem; color: var(--brand);">🍕 Pizza Margherita</h4>
+            <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Based on your love for Italian classics</p>
+          </div>
+          <div class="recommendation-tile" onclick="openDishModal('pad-thai')">
+            <h4 style="margin: 0 0 0.5rem; color: var(--brand);">🍜 Pad Thai</h4>
+            <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Perfect for your adventurous palate</p>
+          </div>
+          <div class="recommendation-tile" onclick="openDishModal('caesar-salad')">
+            <h4 style="margin: 0 0 0.5rem; color: var(--brand);">🍗 Caesar Salad</h4>
+            <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Light and fresh option for you</p>
+          </div>
+          <div class="recommendation-tile" onclick="openDishModal('sushi-platter')">
+            <h4 style="margin: 0 0 0.5rem; color: var(--brand);">🍣 Chef's Sushi Selection</h4>
+            <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Premium choice for seafood lovers</p>
+          </div>
+        </div>
+      `;
+      
+      canvas.innerHTML = sampleTiles;
+    }
+
+    function hideRecommendations() {
+      const recommendationsSection = document.getElementById('recommendations');
+      recommendationsSection.style.display = 'none';
+    }
+
+    // Menu Search Functionality
+    let currentFilter = 'all';
+    let allDishCards = [];
+
+    function initializeMenuSearch() {
+      // Store all dish cards
+      allDishCards = Array.from(document.querySelectorAll('.restaurant-card'));
+      
+      const searchInput = document.getElementById('menuSearchInput');
+      const clearBtn = document.getElementById('menuClearBtn');
+      const filterChips = document.querySelectorAll('.filter-chip');
+      
+      // Search input handler with debounce
+      let searchTimeout;
+      searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          performSearch(e.target.value);
+        }, 300);
+        
+        // Show/hide clear button
+        clearBtn.classList.toggle('visible', e.target.value.length > 0);
+      });
+      
+      // Clear button
+      clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.classList.remove('visible');
+        performSearch('');
+        searchInput.focus();
+      });
+      
+      // Filter chips
+      filterChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          const filter = this.dataset.filter;
+          
+          // Update active state
+          filterChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          
+          currentFilter = filter;
+          performSearch(searchInput.value);
+        });
+      });
+      
+      // Set initial filter as active
+      filterChips[0].classList.add('active');
+      
+      // Sticky search bar effect
+      const searchSection = document.querySelector('.menu-search-section');
+      let lastScroll = 0;
+      
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 200) {
+          searchSection.classList.add('scrolled');
+      } else {
+          searchSection.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+      });
+    }
+
+    function performSearch(searchTerm) {
+      const term = searchTerm.toLowerCase().trim();
+      const resultsInfo = document.getElementById('searchResultsInfo');
+      const noResults = document.getElementById('noResultsMessage');
+      const dishesTitle = document.getElementById('dishesTitle');
+      const dishesSubtitle = document.getElementById('dishesSubtitle');
+      
+      // Track search term in InterestKit if it's not empty
+      if (term && typeof InterestKit !== 'undefined') {
+        // Record the full search term in meta: search
+        InterestKit.record({
+          bucket: 'search',
+          key: term,
+          weight: 1,
+          meta: {
+            searchTerm: searchTerm,
+            timestamp: Date.now(),
+            resultsCount: 0, // Will be updated below
+            filter: currentFilter !== 'all' ? currentFilter : null
+          }
+        });
+        
+        // Also tokenize and record individual search tokens
+        InterestKit.recordSearch(term, 0.5);
+      }
+      
+      let visibleCount = 0;
+      
+      allDishCards.forEach(card => {
+        const dishId = card.getAttribute('data-track-id');
+        const dish = dishData[dishId];
+        
+        if (!dish) {
+          card.style.display = 'none';
+          return;
+        }
+        
+        // Check filter match
+        let filterMatch = currentFilter === 'all';
+        if (!filterMatch) {
+          if (currentFilter === 'Vegetarian' || currentFilter === 'Seafood') {
+            filterMatch = dish.tags && dish.tags.includes(currentFilter);
+          } else {
+            filterMatch = dish.category === currentFilter;
+          }
+        }
+        
+        // Check search match
+        let searchMatch = !term;
+        if (term) {
+          const searchableText = [
+            dish.title,
+            dish.description,
+            dish.category,
+            ...(dish.tags || [])
+          ].join(' ').toLowerCase();
+          
+          searchMatch = searchableText.includes(term);
+        }
+        
+        // Show/hide card
+        if (filterMatch && searchMatch) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Update the search meta with results count
+      if (term && typeof InterestKit !== 'undefined') {
+        InterestKit.record({
+          bucket: 'search',
+          key: term,
+          weight: 0, // Don't increment weight, just update meta
+          meta: {
+            searchTerm: searchTerm,
+            timestamp: Date.now(),
+            resultsCount: visibleCount,
+            filter: currentFilter !== 'all' ? currentFilter : null,
+            hasResults: visibleCount > 0
+          }
+        });
+      }
+      
+      // Update UI based on results
+      if (term || currentFilter !== 'all') {
+        if (visibleCount > 0) {
+          let infoText = `Found ${visibleCount} dish${visibleCount !== 1 ? 'es' : ''}`;
+          if (term) infoText += ` matching "${searchTerm}"`;
+          if (currentFilter !== 'all') {
+            const filterName = currentFilter === 'Vegetarian' || currentFilter === 'Seafood' 
+              ? currentFilter 
+              : `${currentFilter} cuisine`;
+            infoText += ` in ${filterName}`;
+          }
+          
+          resultsInfo.textContent = infoText;
+          resultsInfo.classList.add('visible');
+          noResults.classList.remove('visible');
+          dishesTitle.textContent = 'Search Results';
+          dishesSubtitle.textContent = infoText;
+        } else {
+          resultsInfo.classList.remove('visible');
+          noResults.classList.add('visible');
+          dishesTitle.textContent = 'No Results Found';
+          dishesSubtitle.textContent = 'Try a different search term or filter';
+        }
+      } else {
+        resultsInfo.classList.remove('visible');
+        noResults.classList.remove('visible');
+        dishesTitle.textContent = "Today's Specials";
+        dishesSubtitle.textContent = "Chef's recommended dishes made with the finest ingredients";
+      }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', initializeApp);
+    
+    // Also initialize if already loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
+    }
+  </script>
+</body>
+</html>
