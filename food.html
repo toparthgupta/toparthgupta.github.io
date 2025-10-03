@@ -1889,7 +1889,7 @@
             Chat with our AI Food Guide to get customized dish suggestions based 
             on your taste preferences, dietary needs, and culinary adventure level.
           </p>
-          <button class="recommendations-action" onclick="showFoodRecommendations()">
+          <button class="recommendations-action" onclick="sendMessageToChat()">
             <span>🤖</span>
             Chat with Food Guide
           </button>
@@ -2965,6 +2965,10 @@
     let cartCount = 0;
     let cartItems = [];
 
+	function sendMessageToChat() {
+		agentforce_messaging.utilAPI.sendTextMessage("Hi, what are your specials?");
+	}
+
     function toggleCart() {
       const sidebar = document.getElementById('cartSidebar');
       const overlay = document.getElementById('cartOverlay');
@@ -3635,7 +3639,6 @@
 			])
 .then(() => {
     console.log("Successfully set agent context.");
-    agentforce_messaging.util.sendTextMessage("I want a Cake Recipe");
 })
 .catch((error) => {
     console.log("Error thrown while setting agent context." + error);
