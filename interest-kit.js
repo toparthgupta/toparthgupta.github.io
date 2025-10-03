@@ -137,22 +137,8 @@
     },
     _trySetEngagement(sendSalesforceEvents = false){
       try {
-        if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function') {
-          global.agentforce_messaging.utilAPI.setEngagement(global.INTEREST_KIT_DATA);
-          global.agentforce_messaging.utilAPI.setSessionContext([
-                        {
-                            "name": "_AgentContext",
-                            "value": {
-                                "valueType": "StructuredValue",
-                                "value": {
-									"currentPage": "Strawberry",
-									"User_Interest": "Strawberry", 
-									"Interest": "Strawberry", 
-                            	}
-                        	}
-						}
-                    ]
-		)
+        if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
+          global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
           this._engagementRetryCount = 0; // reset on success
           if (sendSalesforceEvents) {
             this._sendSalesforceInteractions();
@@ -426,7 +412,8 @@
       return affinity;
     },
     getAffinity(bucket, key){ if (!this._storage) this.init(); const m=this._storage.getMeta(bucket,key)||{}; return round2(this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||now(), now())); },
-    getTopByAffinity(bucket, n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const byBucket=(data.meta[bucket]||{}); const t=now(); const entries=Object.entries(byBucket).map(([k,m])=>{ const v=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); return [k, round2(v)]; }); return entries.sort((a,b)=>b[1]-a[1]).slice(0,n); }
+    getTopByAffinity(bucket, n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const byBucket=(data.meta[bucket]||{}); const t=now(); const entries=Object.entries(byBucket).map(([k,m])=>{ const v=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); return [k, round2(v)]; }); return entries.sort((a,b)=>b[1]-a[1]).slice(0,n); },
+    getTopItems(n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const allMeta=data.meta||{}; const t=now(); const entries=[]; Object.keys(allMeta).forEach(bucket=>{ const byBucket=allMeta[bucket]||{}; Object.entries(byBucket).forEach(([k,m])=>{ const affinity=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); const lastSeen=m.lastSeenAt||m.affinityUpdatedAt||0; entries.push({bucket,key:k,affinity:round2(affinity),lastSeenAt:lastSeen,meta:m}); }); }); return entries.sort((a,b)=>{ const diff=b.affinity-a.affinity; if(diff!==0)return diff; return b.lastSeenAt-a.lastSeenAt; }).slice(0,n); }
   };
 
   // Attach globally
