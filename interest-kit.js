@@ -137,8 +137,8 @@
     },
     _trySetEngagement(sendSalesforceEvents = false){
       try {
-        if (global.agentforce_messaging && global.agentforce_messaging.util && typeof global.agentforce_messaging.util.setEngagement === 'function') {
-          global.agentforce_messaging.util.setEngagement(global.INTEREST_KIT_DATA);
+        if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function') {
+          global.agentforce_messaging.utilAPI.setEngagement(global.INTEREST_KIT_DATA);
           this._engagementRetryCount = 0; // reset on success
           if (sendSalesforceEvents) {
             this._sendSalesforceInteractions();
