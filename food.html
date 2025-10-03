@@ -1896,70 +1896,8 @@
         </div>
         
         <div class="recommendations-canvas" id="recommendationsCanvas">
-          <!-- Recipe Recommendation 1 -->
-          <div class="restaurant-card" onclick="openDishModal('margherita-pizza')"
-               data-track="click view" 
-               data-track-type="recipe" 
-               data-track-id="margherita-pizza"
-               data-track-category="Pizza"
-               data-track-tags="Vegetarian,Popular"
-               data-track-title="Pizza Margherita"
-               data-track-image="./assets/pizza.jpg"
-               style="cursor: pointer;">
-            <div style="position: relative;">
-              <img src="./assets/pizza.jpg" alt="Margherita Pizza" class="restaurant-image">
-              <div class="restaurant-badge">🌟 Recommended</div>
-            </div>
-            <div class="restaurant-content">
-              <div class="restaurant-header" style="margin-bottom: 0;">
-                <h3 class="restaurant-name">Pizza Margherita</h3>
-                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$18.99</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recipe Recommendation 2 -->
-          <div class="restaurant-card" onclick="openDishModal('carbonara')"
-               data-track="click view" 
-               data-track-type="recipe" 
-               data-track-id="carbonara"
-               data-track-category="Pasta"
-               data-track-tags="Classic,Popular"
-               data-track-title="Spaghetti Carbonara"
-               data-track-image="./assets/carbonara.jpg"
-               style="cursor: pointer;">
-            <div style="position: relative;">
-              <img src="./assets/carbonara.jpg" alt="Spaghetti Carbonara" class="restaurant-image">
-              <div class="restaurant-badge">🌟 Recommended</div>
-            </div>
-            <div class="restaurant-content">
-              <div class="restaurant-header" style="margin-bottom: 0;">
-                <h3 class="restaurant-name">Spaghetti Carbonara</h3>
-                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$16.99</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recipe Recommendation 3 -->
-          <div class="restaurant-card" onclick="openDishModal('tiramisu')"
-               data-track="click view" 
-               data-track-type="recipe" 
-               data-track-id="tiramisu"
-               data-track-category="Dessert"
-               data-track-tags="Sweet,Popular"
-               data-track-title="Classic Tiramisu"
-               data-track-image="./assets/tiramisu.jpg"
-               style="cursor: pointer;">
-            <div style="position: relative;">
-              <img src="./assets/tiramisu.jpg" alt="Classic Tiramisu" class="restaurant-image">
-              <div class="restaurant-badge">🌟 Recommended</div>
-            </div>
-            <div class="restaurant-content">
-              <div class="restaurant-header" style="margin-bottom: 0;">
-                <h3 class="restaurant-name">Classic Tiramisu</h3>
-                <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$8.99</span>
-              </div>
-            </div>
+          <div class="canvas-placeholder">
+            Your personalized dish recommendations will appear here...
           </div>
         </div>
       </div>
@@ -3072,6 +3010,102 @@
       console.log('Haven Kitchen app initialized');
       // Initialize menu search functionality
       initializeMenuSearch();
+      // Load personalized recommendations
+      loadRecommendations();
+    }
+    
+    // Load recommendations from InterestKit
+    function loadRecommendations() {
+      try {
+        if (typeof InterestKit === 'undefined') {
+          console.log('InterestKit not available');
+          return;
+        }
+        
+        // Get top 3 items from InterestKit
+        const topItems = InterestKit.getTopItems(3);
+        
+        if (!topItems || topItems.length === 0) {
+          console.log('No recommendations available yet');
+          return;
+        }
+        
+        // Filter out items that are in the dishData
+        const recommendations = topItems
+          .filter(item => dishData[item.key])
+          .slice(0, 3);
+        
+        if (recommendations.length === 0) {
+          console.log('No matching dishes found in dishData');
+          return;
+        }
+        
+        // Render recommendations
+        renderRecommendations(recommendations);
+      } catch (error) {
+        console.error('Error loading recommendations:', error);
+      }
+    }
+    
+    function renderRecommendations(recommendations) {
+      const canvas = document.getElementById('recommendationsCanvas');
+      if (!canvas) return;
+      
+      // Get current dish IDs to check if recommendations changed
+      const currentDishIds = Array.from(canvas.querySelectorAll('[data-track-id]'))
+        .map(card => card.getAttribute('data-track-id'));
+      
+      const newDishIds = recommendations.map(item => item.key);
+      
+      // Check if recommendations are the same
+      const areEqual = currentDishIds.length === newDishIds.length && 
+                       currentDishIds.every((id, index) => id === newDishIds[index]);
+      
+      // Don't update if recommendations haven't changed
+      if (areEqual) return;
+      
+      // Add fade-out effect
+      canvas.style.opacity = '0.5';
+      canvas.style.transition = 'opacity 0.3s ease';
+      
+      setTimeout(() => {
+        // Clear and update content
+        canvas.innerHTML = '';
+        
+        // Create recommendation cards
+        const cardsHTML = recommendations.map(item => {
+          const dish = dishData[item.key];
+          if (!dish) return '';
+          
+          return `
+            <div class="restaurant-card" onclick="openDishModal('${item.key}')"
+                 data-track="click view" 
+                 data-track-type="recipe" 
+                 data-track-id="${item.key}"
+                 data-track-category="${dish.category}"
+                 data-track-tags="${dish.tags.join(',')}"
+                 data-track-title="${dish.title}"
+                 data-track-image="${dish.image}"
+                 style="cursor: pointer;">
+              <div style="position: relative;">
+                <img src="${dish.image}" alt="${dish.title}" class="restaurant-image">
+                <div class="restaurant-badge">🌟 Recommended</div>
+              </div>
+              <div class="restaurant-content">
+                <div class="restaurant-header" style="margin-bottom: 0;">
+                  <h3 class="restaurant-name">${dish.title}</h3>
+                  <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$${dish.price.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        canvas.innerHTML = cardsHTML;
+        
+        // Fade back in
+        canvas.style.opacity = '1';
+      }, 150);
     }
 
     // Dish Modal Functions
@@ -3338,6 +3372,11 @@
       // Show modal
       document.getElementById('dishModalOverlay').classList.add('show');
       document.body.style.overflow = 'hidden';
+      
+      // Refresh recommendations after a short delay (to allow InterestKit to update)
+      setTimeout(() => {
+        loadRecommendations();
+      }, 100);
     }
 
     function closeDishModal() {
@@ -3378,6 +3417,11 @@
       }
       
       closeDishModal();
+      
+      // Refresh recommendations after adding to cart
+      setTimeout(() => {
+        loadRecommendations();
+      }, 100);
     }
 
 
