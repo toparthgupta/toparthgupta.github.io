@@ -920,6 +920,174 @@
       grid-column: 1 / -1;
     }
 
+    /* Smart Suggestion Toast */
+    .suggestion-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: 1.5rem;
+      max-width: 400px;
+      z-index: 3000;
+      transform: translateY(150%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border: 2px solid var(--primary-200);
+    }
+
+    .suggestion-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .suggestion-toast-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .suggestion-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .suggestion-text {
+      flex: 1;
+    }
+
+    .suggestion-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .suggestion-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .suggestion-dish {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+
+    .suggestion-dish-image {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .suggestion-dish-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .suggestion-dish-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .suggestion-dish-category {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .suggestion-dish-price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .suggestion-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .suggestion-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .suggestion-btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .suggestion-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .suggestion-btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--gray-200);
+    }
+
+    .suggestion-btn-secondary:hover {
+      background: var(--bg-secondary);
+      border-color: var(--gray-300);
+    }
+
+    .toast-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+      transition: var(--transition);
+    }
+
+    .toast-close:hover {
+      color: var(--text-primary);
+      transform: rotate(90deg);
+    }
+
+    @media (max-width: 768px) {
+      .suggestion-toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+      }
+    }
+
     .recommendations-tiles {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -3685,6 +3853,133 @@
     } else {
       initializeApp();
     }
+
+    // Smart Suggestion Toast Logic
+    let suggestionDismissed = false;
+    let currentSuggestion = null;
+    let suggestionShownCount = 0;
+
+    function showSmartSuggestion() {
+      // Don't show if already dismissed or shown too many times
+      if (suggestionDismissed || suggestionShownCount >= 3) return;
+      
+      try {
+        // Get top items from InterestKit
+        const topItems = InterestKit.getTopItems(5);
+        if (!topItems || topItems.length === 0) return;
+        
+        // Find the most popular category from top items
+        const categoryAffinity = {};
+        topItems.forEach(item => {
+          const dish = dishData[item.key];
+          if (dish && dish.category) {
+            categoryAffinity[dish.category] = (categoryAffinity[dish.category] || 0) + item.affinity;
+          }
+        });
+        
+        // Get the top category
+        const topCategory = Object.keys(categoryAffinity).reduce((a, b) => 
+          categoryAffinity[a] > categoryAffinity[b] ? a : b, null
+        );
+        
+        if (!topCategory) return;
+        
+        // Find a dish from that category that user hasn't clicked yet
+        const categoryDishes = Object.keys(dishData).filter(key => {
+          const dish = dishData[key];
+          // Check if it's in the top category and not in the top items already
+          return dish.category === topCategory && !topItems.find(item => item.key === key);
+        });
+        
+        if (categoryDishes.length === 0) {
+          // If all dishes in category are viewed, suggest one with highest affinity
+          const topDish = topItems.find(item => dishData[item.key]?.category === topCategory);
+          if (!topDish) return;
+          currentSuggestion = topDish.key;
+        } else {
+          // Suggest a random dish from the top category
+          currentSuggestion = categoryDishes[Math.floor(Math.random() * categoryDishes.length)];
+        }
+        
+        const dish = dishData[currentSuggestion];
+        if (!dish) return;
+        
+        // Populate toast
+        document.getElementById('suggestionCuisine').textContent = topCategory;
+        document.getElementById('suggestionImage').src = dish.image;
+        document.getElementById('suggestionImage').alt = dish.title;
+        document.getElementById('suggestionName').textContent = dish.title;
+        document.getElementById('suggestionCategory').textContent = dish.category;
+        document.getElementById('suggestionPrice').textContent = `$${dish.price.toFixed(2)}`;
+        
+        // Show toast
+        const toast = document.getElementById('suggestionToast');
+        setTimeout(() => {
+          toast.classList.add('show');
+          suggestionShownCount++;
+        }, 500);
+        
+        // Auto-hide after 10 seconds if not interacted
+        setTimeout(() => {
+          if (toast.classList.contains('show')) {
+            closeSuggestionToast();
+          }
+        }, 10000);
+        
+      } catch (error) {
+        console.error('Error showing smart suggestion:', error);
+      }
+    }
+
+    function closeSuggestionToast() {
+      const toast = document.getElementById('suggestionToast');
+      toast.classList.remove('show');
+      suggestionDismissed = true;
+      currentSuggestion = null;
+    }
+
+    function addSuggestedToCart() {
+      if (!currentSuggestion) return;
+      
+      const dish = dishData[currentSuggestion];
+      if (!dish) return;
+      
+      // Add to cart
+      addToCart(`${dish.title} - $${dish.price.toFixed(2)}`);
+      
+      // Update cart count display
+      const cartCount = document.getElementById('cartCount');
+      if (cartCount) {
+        cartCount.textContent = parseInt(cartCount.textContent || 0) + 1;
+      }
+      
+      // Close toast
+      closeSuggestionToast();
+      
+      // Show a brief success message (optional)
+      const toast = document.getElementById('suggestionToast');
+      toast.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        toast.style.transform = '';
+      }, 200);
+    }
+
+    // Trigger smart suggestion after user has interacted with 3-4 dishes
+    let dishInteractionCount = 0;
+    const originalOpenDishModal = openDishModal;
+    
+    openDishModal = function(dishId) {
+      originalOpenDishModal(dishId);
+      dishInteractionCount++;
+      
+      // Show suggestion after 3-4 interactions
+      if (dishInteractionCount === 3 && !suggestionDismissed) {
+        setTimeout(() => {
+          showSmartSuggestion();
+        }, 2000);
+      }
+    };
+
   </script>
   <script type='text/javascript'>
 	function initEmbeddedMessaging() {
@@ -3726,5 +4021,37 @@
 	};
 </script>
 <script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js'' onload='initEmbeddedMessaging()'></script>
+
+<!-- Smart Suggestion Toast -->
+<div class="suggestion-toast" id="suggestionToast">
+  <button class="toast-close" onclick="closeSuggestionToast()">✕</button>
+  
+  <div class="suggestion-toast-header">
+    <div class="suggestion-icon">🎯</div>
+    <div class="suggestion-text">
+      <h3 class="suggestion-title">We noticed you love <span id="suggestionCuisine"></span>!</h3>
+      <p class="suggestion-subtitle">Try this popular dish</p>
+    </div>
+  </div>
+  
+  <div class="suggestion-dish" id="suggestionDish">
+    <img src="" alt="" class="suggestion-dish-image" id="suggestionImage">
+    <div class="suggestion-dish-info">
+      <h4 class="suggestion-dish-name" id="suggestionName"></h4>
+      <p class="suggestion-dish-category" id="suggestionCategory"></p>
+    </div>
+    <span class="suggestion-dish-price" id="suggestionPrice"></span>
+  </div>
+  
+  <div class="suggestion-actions">
+    <button class="suggestion-btn suggestion-btn-primary" onclick="addSuggestedToCart()">
+      Add to Cart
+    </button>
+    <button class="suggestion-btn suggestion-btn-secondary" onclick="closeSuggestionToast()">
+      Maybe Later
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
