@@ -137,7 +137,7 @@
     },
     _trySetEngagement(sendSalesforceEvents = false){
       try {
-        if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function' && typeof global.agentforce_messaging.utilAPI.setSessionContext === 'function) {
+        if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function' && typeof global.agentforce_messaging.utilAPI.setSessionContext === 'function') {
           global.agentforce_messaging.utilAPI.setEngagement(global.INTEREST_KIT_DATA);
           global.agentforce_messaging.utilAPI.setSessionContext([
 			    {
