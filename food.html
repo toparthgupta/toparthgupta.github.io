@@ -3861,7 +3861,7 @@
 
     function showSmartSuggestion() {
       // Don't show if already dismissed or shown too many times
-      if (suggestionDismissed || suggestionShownCount >= 3) return;
+      if (suggestionShownCount >= 3) return;
       
       try {
         // Get top items from InterestKit
