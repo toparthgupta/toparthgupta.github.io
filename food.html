@@ -3861,7 +3861,7 @@
 
     function showSmartSuggestion() {
       // Don't show if already dismissed or shown too many times
-      if (suggestionShownCount >= 3) return;
+      if (suggestionShownCount >= 6) return;
       
       try {
         // Get top items from InterestKit
@@ -3973,7 +3973,7 @@
       dishInteractionCount++;
       
       // Show suggestion after 3-4 interactions
-      if (dishInteractionCount === 3 && !suggestionDismissed) {
+      if (dishInteractionCount % 3 === 0 && dishInteractionCount !==0) {
         setTimeout(() => {
           showSmartSuggestion();
         }, 2000);
