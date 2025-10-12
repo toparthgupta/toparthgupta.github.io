@@ -3995,26 +3995,6 @@
 					scrt2URL: 'https://orgfarm-52ff4a9ea3.test1.my.pc-rnd.salesforce-scrt.com'
 				}
 			);
-			setTimeout(function() {
-			agentforce_messaging.utilAPI.setSessionContext([
-			    {
-			        "name": "_AgentContext",
-			        "value": {
-			            "valueType": "StructuredValue",
-			            "value": {
-			                "currentPage": "page1",
-			                "Interest": "Pineapple"
-			            }
-			        }
-			    }
-			])
-.then(() => {
-    console.log("Successfully set agent context.");
-})
-.catch((error) => {
-    console.log("Error thrown while setting agent context." + error);
-});
-}, 5000);
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
