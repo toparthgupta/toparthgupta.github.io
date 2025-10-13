@@ -3302,8 +3302,15 @@
     }
     
     function renderRecommendations(recommendations) {
+      console.log('renderRecommendations called with:', recommendations);
+      
       const canvas = document.getElementById('recommendationsCanvas');
-      if (!canvas) return;
+      if (!canvas) {
+        console.error('recommendationsCanvas element not found!');
+        return;
+      }
+      
+      console.log('Canvas element found:', canvas);
       
       // Get current dish IDs to check if recommendations changed
       const currentDishIds = Array.from(canvas.querySelectorAll('[data-track-id]'))
@@ -3311,12 +3318,24 @@
       
       const newDishIds = recommendations.map(item => item.key);
       
-      // Check if recommendations are the same
-      const areEqual = currentDishIds.length === newDishIds.length && 
+      console.log('Current dish IDs:', currentDishIds);
+      console.log('New dish IDs:', newDishIds);
+      
+      // Check if we have a placeholder (no current recommendations)
+      const hasPlaceholder = canvas.querySelector('.canvas-placeholder') !== null;
+      
+      // Check if recommendations are the same (only skip if we have actual recommendations, not placeholder)
+      const areEqual = !hasPlaceholder && 
+                       currentDishIds.length === newDishIds.length && 
+                       currentDishIds.length > 0 &&
                        currentDishIds.every((id, index) => id === newDishIds[index]);
       
-      // Don't update if recommendations haven't changed
-      if (areEqual) return;
+      if (areEqual) {
+        console.log('Recommendations unchanged, skipping update');
+        return;
+      }
+      
+      console.log('Updating recommendations... (hasPlaceholder:', hasPlaceholder, ')');
       
       // Add fade-out effect
       canvas.style.opacity = '0.5';
@@ -3343,7 +3362,17 @@
           
           const dishId = item.key;
           const dishTitle = dish.title || dish.name || 'Unknown Dish';
-          const dishPrice = dish.price || "$0";
+          
+          // Handle both string ("$19" or "19") and numeric prices
+          let dishPrice = 0;
+          if (typeof dish.price === 'number') {
+            dishPrice = dish.price;
+          } else if (typeof dish.price === 'string') {
+            // Remove $ and other non-numeric characters except decimal point
+            const cleaned = dish.price.replace(/[^0-9.]/g, '');
+            dishPrice = parseFloat(cleaned) || 0;
+          }
+          
           const dishImage = dish.image || './assets/pizza.jpg';
           const dishCategory = dish.category || 'Custom';
           const dishTags = Array.isArray(dish.tags) ? dish.tags.join(',') : '';
@@ -3384,15 +3413,59 @@
           `;
         }).join('');
         
+        console.log('Generated HTML length:', cardsHTML.length);
+        console.log('Number of cards generated:', recommendations.length);
+        
         canvas.innerHTML = cardsHTML;
+        
+        console.log('Recommendations updated in DOM');
         
         // Fade back in
         canvas.style.opacity = '1';
+        
+        // Optionally scroll to recommendations section (only if not in viewport)
+        const rect = canvas.getBoundingClientRect();
+        const isInViewport = (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+        
+        if (!isInViewport) {
+          console.log('Scrolling to recommendations section...');
+          document.getElementById('recommendations')?.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
       }, 150);
     }
     
     // Expose renderRecommendations globally for InterestKit API
     window.renderRecommendations = renderRecommendations;
+    
+    // Helper function to force refresh recommendations (useful for debugging)
+    window.forceRefreshRecommendations = function(dishes) {
+      console.log('Force refreshing recommendations with:', dishes);
+      if (!Array.isArray(dishes) || dishes.length === 0) {
+        console.error('forceRefreshRecommendations: Expected array of dish IDs');
+        return false;
+      }
+      
+      // Clear current recommendations first
+      const canvas = document.getElementById('recommendationsCanvas');
+      if (canvas) {
+        canvas.innerHTML = '<div class="canvas-placeholder">Loading recommendations...</div>';
+      }
+      
+      // Use InterestKit API
+      setTimeout(() => {
+        InterestKit.setRecommendations(dishes);
+      }, 100);
+      
+      return true;
+    };
     
     // Add to cart from recommendations
     function addToCartFromRecommendation(dishId, dishTitle, dishPrice) {
