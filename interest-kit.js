@@ -413,7 +413,78 @@
     },
     getAffinity(bucket, key){ if (!this._storage) this.init(); const m=this._storage.getMeta(bucket,key)||{}; return round2(this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||now(), now())); },
     getTopByAffinity(bucket, n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const byBucket=(data.meta[bucket]||{}); const t=now(); const entries=Object.entries(byBucket).map(([k,m])=>{ const v=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); return [k, round2(v)]; }); return entries.sort((a,b)=>b[1]-a[1]).slice(0,n); },
-    getTopItems(n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const itemsMeta=(data.meta||{}).items||{}; const t=now(); const entries=[]; Object.entries(itemsMeta).forEach(([k,m])=>{ const affinity=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); const lastSeen=m.lastSeenAt||m.affinityUpdatedAt||0; entries.push({key:k,affinity:round2(affinity),lastSeenAt:lastSeen,meta:m}); }); return entries.sort((a,b)=>{ const diff=b.affinity-a.affinity; if(diff!==0)return diff; return b.lastSeenAt-a.lastSeenAt; }).slice(0,n); }
+    getTopItems(n=5){ if(!this._storage) this.init(); const data=this._storage.get(); const itemsMeta=(data.meta||{}).items||{}; const t=now(); const entries=[]; Object.entries(itemsMeta).forEach(([k,m])=>{ const affinity=this._decayValue(m.affinity||0, m.affinityUpdatedAt||m.lastSeenAt||t, t); const lastSeen=m.lastSeenAt||m.affinityUpdatedAt||0; entries.push({key:k,affinity:round2(affinity),lastSeenAt:lastSeen,meta:m}); }); return entries.sort((a,b)=>{ const diff=b.affinity-a.affinity; if(diff!==0)return diff; return b.lastSeenAt-a.lastSeenAt; }).slice(0,n); },
+    
+    // Set custom recommendations API
+    // Pass an array of dish IDs OR dish objects to display in the recommendations section
+    // Example 1 (dish IDs): InterestKit.setRecommendations(['margherita-pizza', 'pad-thai', 'tiramisu'])
+    // Example 2 (dish objects): InterestKit.setRecommendations([
+    //   { id: 'custom-1', name: 'Special Pizza', price: 19.99, image: './assets/pizza.jpg' },
+    //   { id: 'custom-2', name: 'Deluxe Pasta', price: 24.99, image: './assets/pasta.jpg' }
+    // ])
+    setRecommendations(dishes){
+      if (!Array.isArray(dishes) || dishes.length === 0) {
+        console.warn('InterestKit.setRecommendations: Expected non-empty array of dish IDs or dish objects');
+        return false;
+      }
+      
+      try {
+        // Detect if we received dish IDs (strings) or dish objects
+        const firstItem = dishes[0];
+        const isDishObjects = typeof firstItem === 'object' && firstItem !== null;
+        
+        let recommendations;
+        
+        if (isDishObjects) {
+          // Format dish objects into the expected structure
+          recommendations = dishes.map((dish, index) => {
+            // Validate required fields
+            const id = dish.id || dish.key || `custom-${index}`;
+            const name = dish.name || dish.title || 'Unknown Dish';
+            const price = typeof dish.price === 'number' ? dish.price : 0;
+            const image = dish.image || './assets/pizza.jpg'; // fallback image
+            
+            return {
+              key: id,
+              affinity: 10 - index,
+              lastSeenAt: now(),
+              meta: { 
+                source: 'custom',
+                index,
+                customData: {
+                  title: name,
+                  price: price,
+                  image: image,
+                  category: dish.category || 'Custom',
+                  tags: dish.tags || []
+                }
+              }
+            };
+          });
+        } else {
+          // Format dish IDs into the expected structure (backward compatible)
+          recommendations = dishes.map((dishId, index) => ({
+            key: dishId,
+            affinity: 10 - index,
+            lastSeenAt: now(),
+            meta: { source: 'custom', index }
+          }));
+        }
+        
+        // Call the global renderRecommendations function if it exists
+        if (typeof global.renderRecommendations === 'function') {
+          global.renderRecommendations(recommendations);
+          console.log('InterestKit: Custom recommendations displayed', dishes);
+          return true;
+        } else {
+          console.warn('InterestKit.setRecommendations: renderRecommendations function not found. Make sure food-delivery.html is loaded.');
+          return false;
+        }
+      } catch (error) {
+        console.error('InterestKit.setRecommendations: Error displaying recommendations', error);
+        return false;
+      }
+    }
   };
 
   // Attach globally
@@ -422,5 +493,3 @@
   try { InterestKit.init(); } catch(e){}
 
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-
