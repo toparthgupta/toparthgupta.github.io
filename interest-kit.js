@@ -423,7 +423,6 @@
     //   { id: 'custom-2', name: 'Deluxe Pasta', price: 24.99, image: './assets/pasta.jpg' }
     // ])
     setRecommendations(dishes){
-      dishes = JSON.parse(JSON.stringify(dishes));
       if (!Array.isArray(dishes) || dishes.length === 0) {
         console.warn('InterestKit.setRecommendations: Expected non-empty array of dish IDs or dish objects');
         return false;
@@ -442,7 +441,19 @@
             // Validate required fields
             const id = dish.id || dish.key || `custom-${index}`;
             const name = dish.name || dish.title || 'Unknown Dish';
-            const price = dish.price || 0;
+            
+            // Handle both string ("$19" or "19") and numeric prices
+            let price = 0;
+            if (typeof dish.price === 'number') {
+              price = dish.price;
+            } else if (typeof dish.price === 'string') {
+              // Remove $ and other non-numeric characters except decimal point
+              const cleaned = dish.price.replace(/[^0-9.]/g, '');
+              price = parseFloat(cleaned) || 0;
+            } else {
+              price = 0;
+            }
+            
             const image = dish.image || './assets/pizza.jpg'; // fallback image
             
             return {
@@ -474,15 +485,18 @@
         
         // Call the global renderRecommendations function if it exists
         if (typeof global.renderRecommendations === 'function') {
+          console.log('InterestKit: Calling renderRecommendations with', recommendations.length, 'items');
           global.renderRecommendations(recommendations);
-          console.log('InterestKit: Custom recommendations displayed', dishes);
+          console.log('InterestKit: Custom recommendations displayed successfully');
           return true;
         } else {
-          console.warn('InterestKit.setRecommendations: renderRecommendations function not found. Make sure food-delivery.html is loaded.');
+          console.error('InterestKit.setRecommendations: renderRecommendations function not found!');
+          console.error('Available on window:', Object.keys(global).filter(k => k.includes('render')));
           return false;
         }
       } catch (error) {
         console.error('InterestKit.setRecommendations: Error displaying recommendations', error);
+        console.error('Error stack:', error.stack);
         return false;
       }
     }
