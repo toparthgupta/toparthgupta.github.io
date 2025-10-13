@@ -442,7 +442,7 @@
             // Validate required fields
             const id = dish.id || dish.key || `custom-${index}`;
             const name = dish.name || dish.title || 'Unknown Dish';
-            const price = typeof dish.price === 'number' ? dish.price : 0;
+            const price = dish.price || 0;
             const image = dish.image || './assets/pizza.jpg'; // fallback image
             
             return {
