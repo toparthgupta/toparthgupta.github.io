@@ -3332,7 +3332,6 @@
       
       if (areEqual) {
         console.log('Recommendations unchanged, skipping update');
-        return;
       }
       
       console.log('Updating recommendations... (hasPlaceholder:', hasPlaceholder, ')');
@@ -3398,7 +3397,7 @@
               <div class="restaurant-content">
                 <div class="restaurant-header" style="margin-bottom: 0;">
                   <h3 class="restaurant-name">${dishTitle}</h3>
-                  <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">${dishPrice.toFixed(2)}</span>
+                  <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$${dishPrice.toFixed(2)}</span>
                 </div>
               </div>
               <button class="add-to-cart-mini" 
