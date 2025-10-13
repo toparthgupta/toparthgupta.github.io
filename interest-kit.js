@@ -139,7 +139,7 @@
       try {
         if (global.agentforce_messaging && global.agentforce_messaging.utilAPI && typeof global.agentforce_messaging.utilAPI.setEngagement === 'function' && typeof global.agentforce_messaging.utilAPI.setSessionContext === 'function') {
           global.agentforce_messaging.utilAPI.setEngagement(global.INTEREST_KIT_DATA);
-          global.agentforce_messaging.utilAPI.setApi(setRecommendations);
+          global.agentforce_messaging.utilAPI.setApi(this.setRecommendations);
           this._engagementRetryCount = 0; // reset on success
           if (sendSalesforceEvents) {
             this._sendSalesforceInteractions();
