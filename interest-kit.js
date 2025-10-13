@@ -423,6 +423,7 @@
     //   { id: 'custom-2', name: 'Deluxe Pasta', price: 24.99, image: './assets/pasta.jpg' }
     // ])
     setRecommendations(dishes){
+      dishes = JSON.parse(JSON.stringify(dishes));
       if (!Array.isArray(dishes) || dishes.length === 0) {
         console.warn('InterestKit.setRecommendations: Expected non-empty array of dish IDs or dish objects');
         return false;
