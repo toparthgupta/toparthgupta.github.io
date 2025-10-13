@@ -881,14 +881,14 @@
 
     .recommendations-canvas {
       margin-top: 3rem;
-      padding: 3rem 1rem;
+      padding: 3rem 2rem;
       background: transparent;
       border-radius: 20px;
       border: 2px dashed rgba(244,63,94,0.2);
-      min-height: 200px;
+      min-height: 600px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
       align-items: start;
       justify-content: center;
       position: relative;
@@ -896,28 +896,98 @@
     
     .recommendations-canvas .restaurant-card {
       margin: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .recommendations-canvas .restaurant-image {
+      height: 200px;
+      object-fit: cover;
     }
     
     .recommendations-canvas .restaurant-content {
-      padding: 1rem;
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     
     .recommendations-canvas .restaurant-name {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       line-height: 1.3;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
     }
     
     .recommendations-canvas .delivery-fee {
       color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .recommendations-canvas .restaurant-badge {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      left: 1rem;
+      right: auto;
+    }
+    
+    .recommendations-canvas .add-to-cart-mini {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+      min-width: 70px;
+      height: 36px;
+    }
+    
+    .recommendations-canvas .add-to-cart-mini svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+    
+    .recommendations-canvas .add-to-cart-mini:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .recommendations-canvas .add-to-cart-mini:active {
+      transform: translateY(0);
+    }
+    
+    .recommendations-canvas .restaurant-card {
+      position: relative;
     }
 
     .canvas-placeholder {
       color: var(--muted);
       font-style: italic;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 6rem 2rem;
       grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 500px;
     }
 
     /* Smart Suggestion Toast */
@@ -1154,6 +1224,7 @@
         padding: 2rem 1rem;
         grid-template-columns: 1fr;
         gap: 2rem;
+        min-height: 400px;
       }
     }
     
@@ -1161,6 +1232,18 @@
       .recommendations-canvas {
         grid-template-columns: repeat(2, 1fr);
         gap: 2rem;
+        min-height: 550px;
+      }
+    }
+    
+    @media (min-width: 1025px) {
+      .recommendations-canvas {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem;
+        min-height: 600px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
@@ -3181,8 +3264,8 @@
       console.log('Haven Kitchen app initialized');
       // Initialize menu search functionality
       initializeMenuSearch();
-      // Load personalized recommendations
-      loadRecommendations();
+      // Note: Automatic recommendations disabled - use InterestKit.setRecommendations() API instead
+      // loadRecommendations();
     }
     
     // Load recommendations from InterestKit
@@ -3245,29 +3328,58 @@
         
         // Create recommendation cards
         const cardsHTML = recommendations.map(item => {
-          const dish = dishData[item.key];
-          if (!dish) return '';
+          // Check if this is a custom dish with full data or a reference to dishData
+          let dish;
+          const hasCustomData = item.meta && item.meta.customData;
+          
+          if (hasCustomData) {
+            // Use custom dish data
+            dish = item.meta.customData;
+          } else {
+            // Look up in dishData
+            dish = dishData[item.key];
+            if (!dish) return ''; // Skip if not found
+          }
+          
+          const dishId = item.key;
+          const dishTitle = dish.title || dish.name || 'Unknown Dish';
+          const dishPrice = typeof dish.price === 'number' ? dish.price : 0;
+          const dishImage = dish.image || './assets/pizza.jpg';
+          const dishCategory = dish.category || 'Custom';
+          const dishTags = Array.isArray(dish.tags) ? dish.tags.join(',') : '';
+          
+          // For custom dishes without modal data, make card non-clickable
+          const clickHandler = hasCustomData ? '' : `onclick="openDishModal('${dishId}')"`;
+          const cursorStyle = hasCustomData ? '' : 'cursor: pointer;';
           
           return `
-            <div class="restaurant-card" onclick="openDishModal('${item.key}')"
+            <div class="restaurant-card" ${clickHandler}
                  data-track="click view" 
                  data-track-type="recipe" 
-                 data-track-id="${item.key}"
-                 data-track-category="${dish.category}"
-                 data-track-tags="${dish.tags.join(',')}"
-                 data-track-title="${dish.title}"
-                 data-track-image="${dish.image}"
-                 style="cursor: pointer;">
+                 data-track-id="${dishId}"
+                 data-track-category="${dishCategory}"
+                 data-track-tags="${dishTags}"
+                 data-track-title="${dishTitle}"
+                 data-track-image="${dishImage}"
+                 style="${cursorStyle}">
               <div style="position: relative;">
-                <img src="${dish.image}" alt="${dish.title}" class="restaurant-image">
+                <img src="${dishImage}" alt="${dishTitle}" class="restaurant-image">
                 <div class="restaurant-badge">🌟 Recommended</div>
               </div>
               <div class="restaurant-content">
                 <div class="restaurant-header" style="margin-bottom: 0;">
-                  <h3 class="restaurant-name">${dish.title}</h3>
-                  <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$${dish.price.toFixed(2)}</span>
+                  <h3 class="restaurant-name">${dishTitle}</h3>
+                  <span class="delivery-fee" style="font-size: 1.1rem; font-weight: 700;">$${dishPrice.toFixed(2)}</span>
                 </div>
               </div>
+              <button class="add-to-cart-mini" 
+                      onclick="event.stopPropagation(); addToCartFromRecommendation('${dishId}', '${dishTitle.replace(/'/g, "\\'")}', ${dishPrice})"
+                      title="Add to cart"
+                      aria-label="Add ${dishTitle} to cart">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+              </button>
             </div>
           `;
         }).join('');
@@ -3278,6 +3390,44 @@
         canvas.style.opacity = '1';
       }, 150);
     }
+    
+    // Expose renderRecommendations globally for InterestKit API
+    window.renderRecommendations = renderRecommendations;
+    
+    // Add to cart from recommendations
+    function addToCartFromRecommendation(dishId, dishTitle, dishPrice) {
+      // Add to cart
+      const itemName = `${dishTitle} - $${dishPrice.toFixed(2)}`;
+      addToCart(itemName);
+      
+      // Show brief feedback
+      const button = event.target.closest('button');
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width: 18px; height: 18px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>';
+      button.style.background = 'var(--success)';
+      
+      setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.style.background = '';
+      }, 800);
+      
+      // Track the interaction if InterestKit is available
+      if (typeof InterestKit !== 'undefined') {
+        InterestKit.record({
+          bucket: 'items',
+          key: dishId,
+          weight: 2, // Higher weight for cart additions from recommendations
+          meta: {
+            event: 'add_to_cart',
+            source: 'recommendations',
+            timestamp: Date.now()
+          }
+        });
+      }
+    }
+    
+    // Expose globally for onclick handlers
+    window.addToCartFromRecommendation = addToCartFromRecommendation;
 
     // Dish Modal Functions
     let currentDish = null;
@@ -3544,10 +3694,10 @@
       document.getElementById('dishModalOverlay').classList.add('show');
       document.body.style.overflow = 'hidden';
       
-      // Refresh recommendations after a short delay (to allow InterestKit to update)
-      setTimeout(() => {
-        loadRecommendations();
-      }, 100);
+      // Note: Automatic recommendations disabled - use InterestKit.setRecommendations() API instead
+      // setTimeout(() => {
+      //   loadRecommendations();
+      // }, 100);
     }
 
     function closeDishModal() {
@@ -3589,10 +3739,10 @@
       
       closeDishModal();
       
-      // Refresh recommendations after adding to cart
-      setTimeout(() => {
-        loadRecommendations();
-      }, 100);
+      // Note: Automatic recommendations disabled - use InterestKit.setRecommendations() API instead
+      // setTimeout(() => {
+      //   loadRecommendations();
+      // }, 100);
     }
 
 
