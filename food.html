@@ -4150,6 +4150,13 @@
 			console.error('Error loading Embedded Messaging: ', err);
 		}
 	};
+
+window.addEventListener('message', function(event) {
+  // Optionally, check event.origin for security
+  if (event.data.type === 'recommendations') {
+    console.log('Dishes from iframe:',InterestKit.setRecommendations(event.data.data.dishes));
+  }
+});
 </script>
 <script type='text/javascript' src='https://orgfarm-3680973252.my.site-com.parthgupta-v6ofpz99ll180.ac.crm.dev:6101/ESWAgents0102MIAW1756727175937/assets/js/init.js'' onload='initEmbeddedMessaging()'></script>
 
